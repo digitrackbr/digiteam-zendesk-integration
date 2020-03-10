@@ -1,0 +1,103 @@
+<p-toast></p-toast>
+<form (ngSubmit)="onCreateFormSubmit()" [formGroup]="createForm">
+  <div class="p-grid">
+    <div class="p-col">
+      <table>
+        <tr>
+          <td>Ticket Id:</td>
+          <td>
+            {{ticketId}}
+          </td>
+        </tr>
+        <tr>
+          <td>Ticket Status:</td>
+          <td>
+            {{ticketStatus}}
+          </td>
+        </tr>
+        <tr>
+          <td>Requester:</td>
+          <td>
+            {{ticketRequesterName}}
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+    <div class="p-col-12">
+      Telefone:
+    </div>
+    <div class="p-col-12">
+      <input pInputText formControlName="phone">
+    </div>
+
+    <div class="p-col-12">
+      Endereço:
+    </div>
+    <div class="p-col-12">
+      <p>{{address}}</p>
+    </div>
+    <div class="p-col-12">
+      <agm-map [latitude]="-15.77972"
+               style="height: 300px; width: 100%"
+               [longitude]="-47.92972"
+               [zoom]="10"
+               (mapClick)="mapClicked($event)"
+               [panControl]="true">
+
+        <agm-marker *ngFor="let point of points" [latitude]="point.lat" [longitude]="point.lng"></agm-marker>
+
+      </agm-map>
+    </div>
+    <div class="p-col-12">
+      Tipo de OS:
+    </div>
+    <div class="p-col-12">
+      <p-dropdown [options]="orderTypeList"
+                  placeholder="Tipo de OS"
+                  formControlName="orderType"
+                  required="true"
+                  [filter]="true">
+      </p-dropdown>
+    </div>
+    <div class="p-col-12">
+      Prioridade:
+    </div>
+    <div class="p-col-12">
+      <p-dropdown [options]="priorityList"
+                  placeholder="Prioridade"
+                  formControlName="priority"
+                  required="true">
+      </p-dropdown>
+    </div>
+
+    <div class="p-col-12">
+      Unidade:
+    </div>
+    <div class="p-col-12">
+      <p-dropdown [options]="unitsList"
+                  required="true"
+                  placeholder="Unidade"
+                  [filter]="true"
+                  formControlName="unit">
+      </p-dropdown>
+    </div>
+
+    <div class="p-col-12">
+      Região:
+    </div>
+    <div class="p-col-12">
+      <p-dropdown [options]="regionsList"
+                  placeholder="Região"
+                  required="true"
+                  [filter]="true"
+                  formControlName="region">
+      </p-dropdown>
+    </div>
+
+    <div class="p-col-12" style="text-align: end">
+      <p-button label="Criar OS" type="submit" ></p-button>
+    </div>
+  </div>
+</form>

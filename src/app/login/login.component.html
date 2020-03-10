@@ -1,0 +1,22 @@
+<p-toast></p-toast>
+<form (ngSubmit)="login()" [formGroup]="loginForm">
+  <div class="p-grid">
+
+    <div class="p-col-12" style="text-align: center">
+      <img src="assets/digiteam-logo.png" width="50">
+    </div>
+    <div class="p-col-12" style="text-align: center">
+      <input id="username" type="text" pInputText formControlName="username"
+             placeholder="Digite sua chave..."/>
+    </div>
+    <div class="p-col-12" style="text-align: center">
+      <input id="password" type="password" formControlName="password" placeholder="Digite sua senha..."
+             pPassword [feedback]="false"/>
+    </div>
+
+    <div class="p-col-12" style="text-align: center">
+      <p-button label="Entrar" type="submit" [disabled]="!loginForm.valid"></p-button>
+    </div>
+
+  </div>
+</form>

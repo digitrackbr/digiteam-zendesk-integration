@@ -1,0 +1,58 @@
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Credential, DigiteamService} from '../service/digiteam.service';
+import {MessageService} from 'primeng';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+
+  loginForm: FormGroup;
+  @Output() loginSuccess = new EventEmitter<any>();
+
+  constructor(
+    private fb: FormBuilder,
+    private digiteamService: DigiteamService,
+    private messageService: MessageService
+  ) {
+  }
+
+  ngOnInit() {
+    this.initLoginForm();
+  }
+
+  private initLoginForm() {
+    this.loginForm = this.fb.group({
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required),
+      checked: new FormControl(false)
+    });
+  }
+
+  login() {
+    if (this.loginForm.valid) {
+
+      this.digiteamService.login(this.credentials)
+        .subscribe(
+          result => {
+            this.digiteamService.saveAuthInfo(result);
+            this.loginSuccess.emit(null);
+          },
+          error => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Verifique suas credenciais.'
+            });
+          }
+        );
+    }
+  }
+
+  private get credentials(): Credential {
+    return this.loginForm.value;
+  }
+}
