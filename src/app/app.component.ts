@@ -21,9 +21,19 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const client = ZAFClient.init();
-    client.invoke('resize', {width: '100%', height: '500px'});
 
+    client.metadata().then(metadata => {
+      console.log(metadata.settings);
+      this.digiteamService.registerTenantUrl(metadata.settings['digiteam_url']);
+      this.init();
+    });
+
+    client.invoke('resize', {width: '100%', height: '500px'});
+  }
+
+  init() {
     if (this.digiteamService.isLoggedIn()) {
+      const client = ZAFClient.init();
       client.get('ticket.id').then(data => {
 
         const ticketId = data['ticket.id'];

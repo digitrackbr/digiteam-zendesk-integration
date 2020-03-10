@@ -10,11 +10,21 @@ export class DigiteamService {
   private tokenName = 'user_token';
   urlBaseV0 = 'http://remohml.localhost:8080';
 
+  private tenantUrlHash = 'tenant_url';
+
   constructor(private http: HttpClient) {
   }
 
+  registerTenantUrl(url: string) {
+    localStorage.setItem(this.tenantUrlHash, url);
+  }
+
+  get tenantUrl(): string {
+    return localStorage.getItem(this.tenantUrlHash);
+  }
+
   public login(credential: Credential): Observable<AuthenticationToken> {
-    return this.http.post<AuthenticationToken>(`${this.urlBaseV0}/api-v1/auth`, credential);
+    return this.http.post<AuthenticationToken>(`${this.tenantUrl}/api-v1/auth`, credential);
   }
 
   public saveAuthInfo(authToken: AuthenticationToken): void {
@@ -26,29 +36,29 @@ export class DigiteamService {
   }
 
   public getOrderTypes(): Observable<KeyValueModel[]> {
-    const url = this.urlBaseV0 + '/api-v1/angular/orderTypes';
+    const url = this.tenantUrl + '/api-v1/angular/orderTypes';
     return this.http.get<KeyValueModel[]>(url);
   }
 
   public getRegions(): Observable<KeyValueModel[]> {
-    const url = this.urlBaseV0 + '/api-v1/angular/regions';
+    const url = this.tenantUrl + '/api-v1/angular/regions';
 
     return this.http.get<KeyValueModel[]>(url);
   }
 
   public getUnits(): Observable<KeyValueModel[]> {
-    const url = this.urlBaseV0 + '/api-v1/angular/units';
+    const url = this.tenantUrl + '/api-v1/angular/units';
 
     return this.http.get<KeyValueModel[]>(url);
   }
 
   public createOrder(request: CreateOrderRequest): Observable<CreateOrderResponse> {
-    const url = this.urlBaseV0 + '/api-v1/angular/orders';
+    const url = this.tenantUrl + '/api-v1/angular/orders';
     return this.http.post<CreateOrderResponse>(url, request);
   }
 
   public getOrder(code: string): Observable<OrderDetailModel> {
-    const url = this.urlBaseV0 + `/api-v1/angular/orderDetails/${code}`;
+    const url = this.tenantUrl + `/api-v1/angular/orderDetails/${code}`;
     return this.http.get<OrderDetailModel>(url);
   }
 
