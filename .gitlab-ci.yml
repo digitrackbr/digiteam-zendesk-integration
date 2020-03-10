@@ -1,0 +1,31 @@
+# gitlab int
+image: node:latest
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+before_script:
+  - npm install
+  - npm --prefix ./functions install
+
+deploy-hml:
+  script:
+    - nodejs -v
+    - npx ng build --prod
+    - apt update
+    - apt install -y software-properties-common
+    - apt install -y python-dev
+    - apt install -y python-pip
+    - pip install awscli
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set region sa-east-1
+    - aws s3 rm s3://zendeskapp --recursive
+    - aws s3 cp ./dist/zendesk-integration s3://zendeskapp --recursive --acl public-read
+  only:
+    - master
+  when: manual
+  environment:
+    name: hml
