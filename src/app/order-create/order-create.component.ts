@@ -21,6 +21,8 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   ticketStatus: string;
   ticketId: string;
   address: string;
+  city: string;
+  state: string;
   ticketRequesterName: string;
 
   orderTypeList: SelectItem[];
@@ -119,15 +121,29 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
       if (status === 'OK') {
         console.log(results);
         this.address = results[0].formatted_address;
+
+        const place = results[0];
+
+        place.address_components.forEach((component) => {
+          if (component.types[0] === 'administrative_area_level_1') {
+            this.state = component.short_name;
+            console.log(this.state);
+
+          } else if (component.types[0] === 'administrative_area_level_2') {
+
+            this.city = component.short_name;
+            console.log(this.city);
+          }
+        });
       }
-
     });
-
     console.log(this.points);
   }
 
   onCreateFormSubmit() {
     if (this.createForm.valid) {
+
+
       this.digiteamService.createOrder({
         requestCode: this.ticketId,
         orderTypeId: this.createForm.value.orderType,
@@ -138,8 +154,8 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         lng: this.points[0].lng,
         priority: this.createForm.value.priority,
         address: this.address,
-        city: 'Brasilia',
-        state: 'DF',
+        city: this.city,
+        state: this.state,
         country: 'Brasil',
         unitId: this.createForm.value.unit
       }).subscribe(

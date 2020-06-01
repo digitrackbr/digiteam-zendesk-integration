@@ -1,0 +1,24 @@
+{
+  "name": "digiteam",
+  "author": {
+    "name": "digiteam",
+    "email": "suporte@digiteam.com.br",
+    "url": ""
+  },
+  "defaultLocale": "en",
+  "location": {
+    "support": {
+      "ticket_sidebar": "http://localhost:4200/index.html"
+    }
+  },
+  "version": "1.1",
+  "frameworkVersion": "2.0",
+  "parameters": [
+    {
+      "name": "digiteam_url",
+      "type": "text",
+      "secure": false,
+      "required": true
+    }
+  ]
+}
