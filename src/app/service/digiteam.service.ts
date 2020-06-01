@@ -65,6 +65,10 @@ export class DigiteamService {
   public isLoggedIn() {
     return this.token !== null;
   }
+
+  public logout() {
+    localStorage.removeItem(this.tokenName);
+  }
 }
 
 export interface OrderDetailModel {

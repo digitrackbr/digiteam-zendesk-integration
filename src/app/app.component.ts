@@ -77,4 +77,10 @@ export class AppComponent implements OnInit {
   onCreatedSuccess($event: any) {
     this.onLoginSuccess($event);
   }
+
+  logout($event: MouseEvent) {
+    this.digiteamService.logout();
+    this.appStatus = 'login';
+    $event.preventDefault();
+  }
 }
