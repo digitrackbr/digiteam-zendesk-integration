@@ -93,7 +93,6 @@ export interface OrderDetailModel {
   applicantPhoneNumber: string;
   applicantCode: string;
   requestFormDataJson: any;
-
   notes: string;
   channelId: number;
   sla: number;
@@ -114,7 +113,6 @@ export interface AddressModel {
   longitude: number;
   cityId: number;
   city: string;
-
   poiId: number;
   street: string;
   complement: string;
@@ -122,13 +120,15 @@ export interface AddressModel {
   country: string;
 }
 
-
 export interface CreateOrderRequest {
   orderTypeId: number;
   regionId: number;
   priority: number;
   unitId: number;
   address: string;
+  street: string;
+  neighborhood: string;
+  postalCode: string;
   city: string;
   state: string;
   country: string;

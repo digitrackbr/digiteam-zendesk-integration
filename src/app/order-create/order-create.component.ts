@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {DigiteamService} from '../service/digiteam.service';
+import {AddressModel, DigiteamService} from '../service/digiteam.service';
 import {MessageService, SelectItem} from 'primeng';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
@@ -16,19 +16,23 @@ declare var google: any;
 })
 export class OrderCreateComponent implements AfterViewInit, OnInit {
   title = 'zendesk-integration';
-
   createForm: FormGroup;
-
   ticketStatus: string;
   ticketId: string;
   address: string;
+  street: string;
+  neighborhood: string;
+  postalCode: string;
   city: string;
   state: string;
+  country: string;
   ticketRequesterName: string;
-
   orderTypeList: SelectItem[];
   regionsList: SelectItem[];
   unitsList: SelectItem[];
+  zoom = 12;
+  latitude = -15.77972;
+  longitude = -47.92972;
   @Output() createdSuccess = new EventEmitter<any>();
 
   priorityList: SelectItem[] = [
@@ -36,7 +40,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
     {label: 'Normal', value: 2},
     {label: 'Alta', value: 3},
   ];
-
   points: any[] = [];
 
   constructor(
@@ -48,15 +51,15 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     console.log('ngAfterViewInit');
-
     const client = ZAFClient.init();
-    client.get(['ticket.status', 'ticket.id', 'ticket.requester.name']).then((data) => {
+    client.get(['ticket.status', 'ticket.id', 'ticket.requester.name', 'ticket.assignee', 'ticket']).then((data) => {
       this.ticketId = data['ticket.id'];
       this.ticketStatus = data['ticket.status'];
       this.ticketRequesterName = data['ticket.requester.name'];
+      const a = data['ticket.assignee'];
+      const f = data['ticket'];
     });
-
-
+    this.getPosition();
   }
 
   ngOnInit(): void {
@@ -68,7 +71,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         });
       },
       error => {
-
       }
     );
 
@@ -79,7 +81,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         });
       },
       error => {
-
       }
     );
     this.digiteamService.getUnits().subscribe(
@@ -89,7 +90,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         });
       },
       error => {
-
       }
     );
 
@@ -102,6 +102,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
       unit: new FormControl('', Validators.required),
       orderType: new FormControl('', Validators.required),
       phone: new FormControl('', Validators.required),
+      address: new FormControl('', Validators.required),
       priority: new FormControl('', Validators.required)
     });
   }
@@ -116,24 +117,27 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
 
     const geocoder = new google.maps.Geocoder();
 
-    geocoder.geocode({'location': {lat: $event.coords.lat, lng: $event.coords.lng}}, (results, status) => {
+    geocoder.geocode({location: {lat: $event.coords.lat, lng: $event.coords.lng}}, (results, status) => {
       console.log('STATUS: ' + status);
 
       if (status === 'OK') {
         console.log(results);
         this.address = results[0].formatted_address;
-
         const place = results[0];
 
         place.address_components.forEach((component) => {
-          if (component.types[0] === 'administrative_area_level_1') {
+          if (component.types[0] === 'country') {
+            this.country = component.short_name;
+          } else if (component.types[0] === 'administrative_area_level_1') {
             this.state = component.short_name;
-            console.log(this.state);
-
           } else if (component.types[0] === 'administrative_area_level_2') {
-
             this.city = component.short_name;
-            console.log(this.city);
+          } else if (component.types[2] === 'sublocality_level_3') {
+            this.street = component.short_name;
+          } else if (component.types[0] === 'postal_code') {
+            this.postalCode = component.short_name;
+          } else if (component.types[2] === 'sublocality_level_1') {
+            this.neighborhood = component.short_name;
           }
         });
       }
@@ -143,8 +147,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
 
   onCreateFormSubmit() {
     if (this.createForm.valid) {
-
-
       this.digiteamService.createOrder({
         requestCode: this.ticketId,
         orderTypeId: this.createForm.value.orderType,
@@ -155,9 +157,12 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         lng: this.points[0].lng,
         priority: this.createForm.value.priority,
         address: this.address,
+        street: this.street,
+        neighborhood: this.neighborhood,
+        postalCode: this.postalCode,
         city: this.city,
         state: this.state,
-        country: 'Brasil',
+        country: this.country,
         unitId: this.createForm.value.unit
       }).subscribe(
         result => {
@@ -171,6 +176,64 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
           });
         }
       );
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Invalid. Campos obrigatórios'
+      });
     }
+  }
+
+  mapDragEndMarker($event: any) {
+    this.mapClicked($event);
+  }
+
+  onEnter($event: any) {
+    const geocoder = new google.maps.Geocoder();
+    this.points = [];
+    geocoder.geocode({address: this.createForm.value.address}, (results, status) => {
+      if (status === 'OK') {
+        this.zoom = 15;
+        const place = results[0];
+        this.address = place.formatted_address;
+        this.latitude = place.geometry.location.lat();
+        this.longitude = place.geometry.location.lng();
+        this.points.push({
+          lat: this.latitude,
+          lng: this.longitude
+        });
+
+        place.address_components.forEach((component) => {
+          if (component.types[0] === 'country') {
+            this.country = component.short_name;
+          } else if (component.types[0] === 'administrative_area_level_1') {
+            this.state = component.short_name;
+          } else if (component.types[0] === 'administrative_area_level_2') {
+            this.city = component.short_name;
+          } else if (component.types[2] === 'sublocality_level_3') {
+            this.street = component.short_name;
+          } else if (component.types[0] === 'postal_code') {
+            this.postalCode = component.short_name;
+          } else if (component.types[2] === 'sublocality_level_1') {
+            this.neighborhood = component.short_name;
+          }
+        });
+      }
+    });
+  }
+
+  getPosition(): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+      navigator.geolocation.getCurrentPosition(resp => {
+          this.latitude = resp.coords.latitude;
+          this.longitude = resp.coords.longitude;
+        },
+        err => {
+          reject(err);
+        });
+    });
+
   }
 }
