@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {DigiteamService, OrderDetailModel} from './service/digiteam.service';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {DigiteamService} from './service/digiteam.service';
+import {MessageService} from 'primeng';
+import {OrderDetailModel} from './model/order-detail.model';
 
 declare var ZAFClient: any;
 
@@ -11,12 +13,16 @@ declare var ZAFClient: any;
 })
 export class AppComponent implements OnInit {
   title = 'zendesk-integration';
-
   appStatus = 'loading';
-
   orderDetail: OrderDetailModel;
+  public origin: any;
+  public destination: any;
 
-  constructor(private digiteamService: DigiteamService) {
+  @Output() createdSuccess = new EventEmitter<any>();
+
+  constructor(
+    private digiteamService: DigiteamService,
+    private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -24,7 +30,7 @@ export class AppComponent implements OnInit {
 
     client.metadata().then(metadata => {
       console.log(metadata.settings);
-      this.digiteamService.registerTenantUrl(metadata.settings['digiteam_url']);
+      this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
       this.init();
     });
 
@@ -43,6 +49,8 @@ export class AppComponent implements OnInit {
             result => {
               this.appStatus = 'detail';
               this.orderDetail = result;
+              this.origin = { lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude };
+              this.destination = { lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude };
             },
             error => {
               this.appStatus = 'create';
@@ -66,6 +74,8 @@ export class AppComponent implements OnInit {
           result => {
             this.appStatus = 'detail';
             this.orderDetail = result;
+            this.origin = { lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude };
+            this.destination = { lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude };
           },
           error => {
             this.appStatus = 'create';
@@ -82,5 +92,26 @@ export class AppComponent implements OnInit {
     this.digiteamService.logout();
     this.appStatus = 'login';
     $event.preventDefault();
+  }
+
+  onCancelOrder($event: any) {
+    this.digiteamService.cancelOrder(this.orderDetail.code).subscribe(result => {
+      this.digiteamService.getOrder(this.orderDetail.code)
+        .subscribe(
+          r => {
+            this.appStatus = 'detail';
+            this.orderDetail = r;
+          },
+          error => {
+            this.appStatus = 'cancel';
+          }
+        );
+    }, error => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error criando a OS.'
+      });
+    });
   }
 }

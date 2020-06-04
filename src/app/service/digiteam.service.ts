@@ -1,6 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {OrderDetailModel} from '../model/order-detail.model';
+import {CancelOrderResponse} from '../model/cancel-order-response';
+import {CreateOrderResponse} from '../model/create-order-response';
+import {CreateOrderRequest} from '../model/create-order-request';
+import {KeyValueModel} from '../model/key-value.model';
+import {AuthenticationToken} from '../model/authentication-token';
+import {Credential} from '../model/credential';
 
 @Injectable({
   providedIn: 'root'
@@ -58,8 +65,13 @@ export class DigiteamService {
   }
 
   public getOrder(code: string): Observable<OrderDetailModel> {
-    const url = this.tenantUrl + `/api-v1/angular/orderDetails/${code}`;
+    const url = this.tenantUrl + `/api-v1/angular/orders/orderDetails/${code}`;
     return this.http.get<OrderDetailModel>(url);
+  }
+
+  public cancelOrder(code: string): Observable<CancelOrderResponse> {
+    const url = this.tenantUrl + `/api-v1/angular/orders/${code}/cancel`;
+    return this.http.post<CancelOrderResponse>(url, code);
   }
 
   public isLoggedIn() {
@@ -69,91 +81,4 @@ export class DigiteamService {
   public logout() {
     localStorage.removeItem(this.tokenName);
   }
-}
-
-export interface OrderDetailModel {
-
-  id: number;
-  code: string;
-  syncConcluded: boolean;
-  status: string;
-  statusId: number;
-  lastmodifieddate: Date;
-  priority: number;
-  estimatedDuration: number;
-  regionName: string;
-  createdOn: Date;
-  openDate: Date;
-  dueDate: Date;
-  motive: string;
-  reference: string;
-  project: string;
-  description: string;
-  applicantName: string;
-  applicantPhoneNumber: string;
-  applicantCode: string;
-  requestFormDataJson: any;
-  notes: string;
-  channelId: number;
-  sla: number;
-  whereis: AddressModel;
-  marker: string;
-  statusName: string;
-  statusColor: string;
-  pendingToSynchronize: boolean;
-}
-
-export interface AddressModel {
-  id: number;
-  owner: number;
-  lastmodifieddate: Date;
-  address: string;
-  postalCode: string;
-  latitude: number;
-  longitude: number;
-  cityId: number;
-  city: string;
-  poiId: number;
-  street: string;
-  complement: string;
-  state: string;
-  country: string;
-}
-
-export interface CreateOrderRequest {
-  orderTypeId: number;
-  regionId: number;
-  priority: number;
-  unitId: number;
-  address: string;
-  street: string;
-  neighborhood: string;
-  postalCode: string;
-  city: string;
-  state: string;
-  country: string;
-  requestCode: string;
-  applicantName: string;
-  applicantPhone: string;
-  lat: number;
-  lng: number;
-}
-
-export interface CreateOrderResponse {
-  success: boolean;
-  internalId: number;
-}
-
-export interface KeyValueModel {
-  key: number;
-  value: string;
-}
-
-export interface Credential {
-  username: string;
-  password: string;
-}
-
-export interface AuthenticationToken {
-  token: string;
 }

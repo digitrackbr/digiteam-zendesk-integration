@@ -1,9 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {AddressModel, DigiteamService} from '../service/digiteam.service';
+import {DigiteamService} from '../service/digiteam.service';
 import {MessageService, SelectItem} from 'primeng';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-
 
 declare var ZAFClient: any;
 
@@ -33,6 +31,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   zoom = 12;
   latitude = -15.77972;
   longitude = -47.92972;
+  phone: number;
   @Output() createdSuccess = new EventEmitter<any>();
 
   priorityList: SelectItem[] = [
@@ -52,12 +51,18 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     console.log('ngAfterViewInit');
     const client = ZAFClient.init();
-    client.get(['ticket.status', 'ticket.id', 'ticket.requester.name', 'ticket.assignee', 'ticket']).then((data) => {
-      this.ticketId = data['ticket.id'];
-      this.ticketStatus = data['ticket.status'];
-      this.ticketRequesterName = data['ticket.requester.name'];
-      const a = data['ticket.assignee'];
-      const f = data['ticket'];
+    client.get(['ticket']).then((data) => {
+      const ticket = data['ticket'];
+      this.ticketId = ticket.id;
+      this.ticketStatus = ticket.status;
+      const requester = ticket.requester;
+      this.ticketRequesterName = requester.name;
+      requester.identities.forEach((c) => {
+        if (c.type === 'phone_number') {
+          this.phone = c.value;
+          return;
+        }
+      });
     });
     this.getPosition();
   }
@@ -234,6 +239,5 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
           reject(err);
         });
     });
-
   }
 }

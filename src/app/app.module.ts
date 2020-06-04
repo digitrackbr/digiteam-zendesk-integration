@@ -1,7 +1,7 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
 import {
   ButtonModule,
   DropdownModule,
@@ -16,9 +16,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthInterceptor} from './helper/auth.interceptor';
 import {AgmCoreModule} from '@agm/core';
-import { LoginComponent } from './login/login.component';
-import { OrderCreateComponent } from './order-create/order-create.component';
+import {LoginComponent} from './login/login.component';
+import {OrderCreateComponent} from './order-create/order-create.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AgmDirectionModule} from 'agm-direction';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
       apiKey: 'AIzaSyDOzcHIZsCXxtVLnJJOp7R0IxQU6PVff40',
       libraries: ['places', 'drawing', 'geometry']
     }),
+    AgmDirectionModule,
   ],
   providers: [
     {
@@ -54,4 +56,5 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
