@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   };
   renderOptions = {
     suppressMarkers: true,
-    polylineOptions: { strokeColor: '#000000' }
+    polylineOptions: {strokeColor: '#000000'}
   };
 
   @Output() createdSuccess = new EventEmitter<any>();
@@ -68,12 +68,10 @@ export class AppComponent implements OnInit {
             result => {
               this.appStatus = 'detail';
               this.orderDetail = result;
-              this.orderDetail.marker = 'https://demo.digiteam.com.br/imageFile/cabed354-682f-452f-8705-cc3b55563d5a';
               this.markerOptions.destination = {icon: this.orderDetail.marker};
               this.statusColor = this.orderDetail.statusColor;
               if (this.orderDetail.agentModel !== null) {
                 this.origin = {lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude};
-                this.orderDetail.agentModel.markerUrl = 'https://demo.digiteam.com.br/imageFile/f7b04241-456e-49c8-ab0b-f7ba1241cd9f';
                 this.markerOptions.origin = {icon: this.orderDetail.agentModel.markerUrl};
               }
               this.destination = {lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude};
@@ -144,7 +142,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  public onResponse(event: any) {
+  onResponse(event: any) {
     if (event === undefined || event.routes == null || event.routes.length === 0) {
       return;
     }
@@ -163,5 +161,13 @@ export class AppComponent implements OnInit {
 
       this.durationToPoint = duration;
     }
+  }
+
+  showAgentData(): boolean {
+    return this.orderDetail.statusId === 8
+      || this.orderDetail.statusId === 2
+      || this.orderDetail.statusId === 11
+      || this.orderDetail.statusId === 7
+      || this.orderDetail.statusId === 14;
   }
 }
