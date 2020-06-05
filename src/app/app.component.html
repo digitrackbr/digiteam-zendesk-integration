@@ -88,18 +88,28 @@
             </td>
           </tr>
         </table>
+        <p-footer>
+          <div class="p-col-12" style="text-align: end">
+            <p-button label="Cancelar OS"
+                      icon="pi pi-times"
+                      iconPos="right"
+                      class="ui-button-rounded ui-button-secondary"
+                      (onClick)="onCancelOrder($event)"
+                      *ngIf="orderDetail.statusId === 1">
+            </p-button>
+          </div>
+        </p-footer>
       </p-card>
     </div>
-    <div class="p-col-12" style="text-align: end">
-      <p-button label="Cancelar OS"
-                (onClick)="onCancelOrder($event)"
-                *ngIf="orderDetail.statusId === 1">
-      </p-button>
-    </div>
+
   </div>
 </ng-container>
-<div class="p-col-12" style="text-align: end" *ngIf="appStatus !== 'login'">
+<div class="p-col-12" style="text-align: center" *ngIf="appStatus !== 'login'">
   <p-button label="Sair"
+            icon="pi pi-power-off"
+            iconPos="right"
+            type="button"
+            class="ui-button-rounded ui-button-secondary"
             (onClick)="logout($event)">
   </p-button>
 </div>
