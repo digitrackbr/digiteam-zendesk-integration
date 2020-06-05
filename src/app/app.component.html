@@ -96,13 +96,13 @@
                 *ngIf="orderDetail.statusId === 1">
       </p-button>
     </div>
-    <div class="p-col-12" style="text-align: end" *ngIf="appStatus !== 'login'">
-      <p-button label="Sair"
-                (onClick)="logout($event)">
-      </p-button>
-    </div>
   </div>
 </ng-container>
+<div class="p-col-12" style="text-align: end" *ngIf="appStatus !== 'login'">
+  <p-button label="Sair"
+            (onClick)="logout($event)">
+  </p-button>
+</div>
 
 <!--<ng-container *ngIf="appStatus === 'detail'">
   <div class="p-grid">
