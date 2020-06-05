@@ -1,6 +1,7 @@
 import {AddressModel} from './address.model';
 import {PlanningModel} from './planning.model';
 import {AgentModel} from './agent.model';
+import {OrderTypeModel} from './order-type.model';
 
 export interface OrderDetailModel {
   id: number;
@@ -26,11 +27,12 @@ export interface OrderDetailModel {
   notes: string;
   channelId: number;
   sla: number;
-  whereis: AddressModel;
   marker: string;
   statusName: string;
   statusColor: string;
   pendingToSynchronize: boolean;
+  orderType: OrderTypeModel;
+  whereis: AddressModel;
   agentModel: AgentModel;
   planningModel: PlanningModel;
 }

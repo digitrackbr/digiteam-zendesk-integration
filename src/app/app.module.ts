@@ -3,14 +3,14 @@ import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {
-  ButtonModule,
-  DropdownModule,
-  InputTextModule,
-  MessageModule,
-  MessageService,
-  MessagesModule,
-  PasswordModule,
-  ToastModule
+    ButtonModule, CardModule,
+    DropdownModule,
+    InputTextModule,
+    MessageModule,
+    MessageService,
+    MessagesModule,
+    PasswordModule,
+    ToastModule
 } from 'primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -20,6 +20,7 @@ import {LoginComponent} from './login/login.component';
 import {OrderCreateComponent} from './order-create/order-create.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AgmDirectionModule} from 'agm-direction';
+import {AgmOverlays} from "agm-overlays";
 
 @NgModule({
   declarations: [
@@ -45,6 +46,8 @@ import {AgmDirectionModule} from 'agm-direction';
       libraries: ['places', 'drawing', 'geometry']
     }),
     AgmDirectionModule,
+    CardModule,
+    AgmOverlays,
   ],
   providers: [
     {

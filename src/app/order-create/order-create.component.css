@@ -1,0 +1,12 @@
+:host {
+  font-size: 12px !important;
+}
+
+.ui-inputtext {
+  font-size: 12px !important;
+}
+
+.ui-dropdown .ui-dropdown-label{
+  font-size: 12px !important;
+}
+

@@ -1,7 +1,3 @@
-<div style="float: right; font-size: smaller" *ngIf="appStatus !== 'login'">
-  <a href="#" (click)="logout($event)">sair</a>
-</div>
-
 <app-login *ngIf="appStatus === 'login'" (loginSuccess)="onLoginSuccess($event)">
 
 </app-login>
@@ -19,6 +15,96 @@
 </ng-container>
 
 <ng-container *ngIf="appStatus === 'detail'">
+  <div class="p-grid">
+    <div class="p-col-12">
+      <p-card>
+        <table>
+          <tr>
+            <td>
+              <div class="circle" [style.background-color]="'#' + statusColor"></div>
+            </td>
+            <td>
+            </td>
+            <td>
+              <span>{{orderDetail.status}}</span>
+            </td>
+          </tr>
+        </table>
+        <div class="p-col-12">
+          {{orderDetail.orderType.name}}
+        </div>
+        <div class="p-col-12">
+          Número do OS: {{orderDetail.code}}
+        </div>
+        <div class="p-col-12" *ngIf="orderDetail.statusId === 11">
+          Data de conclusão: {{orderDetail.dueDate | date : 'medium'}}
+        </div>
+        <div class="p-col-12" *ngIf="orderDetail.statusId === 8">
+          <agm-map [latitude]="orderDetail?.whereis.latitude"
+                   [longitude]="orderDetail?.whereis.longitude"
+                   style="height: 300px; width: 100%"
+                   disableDefaultUI="true"
+                   gestureHandling="none">
+            <agm-direction [origin]="origin"
+                           [destination]="destination"
+                           (onResponse)="onResponse($event)"
+                           style="color: black"
+                           [markerOptions]="markerOptions"
+                           [renderOptions]="renderOptions"
+                           *ngIf="orderDetail.planningModel !== null">
+            </agm-direction>
+            <agm-overlay
+              [latitude]="origin.lat"
+              [longitude]="origin.lng">
+              <div class="arrival_time" style="background-color: beige">
+                <b>{{durationToPoint?.value | date:'HH:mm'}}</b>
+              </div>
+            </agm-overlay>
+          </agm-map>
+        </div>
+        <table *ngIf="orderDetail.statusId === 8">
+          <tr>
+            <td>
+              <div>
+                <img alt=""
+                     *ngIf="orderDetail.agentModel?.imageUrl === null"
+                     style="border-radius: 50%; width: 50px"
+                     src="https://secure.gravatar.com/avatar/5dbbdc1eae890ebabee2f477685ba5c2?d=https%3A//assets.zendesk.com/images/2016/default-avatar-80.png&amp;s=80&amp;r=g">
+                <img alt=""
+                     *ngIf="orderDetail.agentModel?.imageUrl !== null"
+                     style="border-radius: 50%; width: 50px"
+                     src="{{orderDetail.agentModel?.imageUrl}}">
+              </div>
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td><span>{{orderDetail.agentModel?.name}}</span></td>
+                </tr>
+                <tr>
+                  <td>Atendimento: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </p-card>
+    </div>
+    <div class="p-col-12" style="text-align: end">
+      <p-button label="Cancelar OS"
+                (onClick)="onCancelOrder($event)"
+                *ngIf="orderDetail.statusId === 1">
+      </p-button>
+    </div>
+    <div class="p-col-12" style="text-align: end" *ngIf="appStatus !== 'login'">
+      <p-button label="Sair"
+                (onClick)="logout($event)">
+      </p-button>
+    </div>
+  </div>
+</ng-container>
+
+<!--<ng-container *ngIf="appStatus === 'detail'">
   <div class="p-grid">
     <div class="p-col-12">
       <table>
@@ -52,16 +138,16 @@
     </div>
     <div class="p-col-4 p-md-2">
         <img alt=""
-             *ngIf="orderDetail.agentModel.imageUrl === null"
+             *ngIf="orderDetail.agentModel?.imageUrl === null"
              style="border-radius: 50%; width: 50px"
              src="https://secure.gravatar.com/avatar/5dbbdc1eae890ebabee2f477685ba5c2?d=https%3A//assets.zendesk.com/images/2016/default-avatar-80.png&amp;s=80&amp;r=g">
       <img alt=""
-           *ngIf="orderDetail.agentModel.imageUrl !== null"
+           *ngIf="orderDetail.agentModel?.imageUrl !== null"
            style="border-radius: 50%; width: 50px"
-           src="{{orderDetail.agentModel.imageUrl}}">
+           src="{{orderDetail.agentModel?.imageUrl}}">
     </div>
     <div class="p-col-8 p-md-6">
-      {{orderDetail.agentModel.name}}
+      {{orderDetail.agentModel?.name}}
     </div>
     <div class="p-col-12 p-md-6">
       Planejamento
@@ -70,19 +156,19 @@
       Tempo de deslocamento:
     </div>
     <div class="p-col-6">
-      {{orderDetail.planningModel.displacementTime}}
+      {{orderDetail.planningModel?.displacementTime}}
     </div>
     <div class="p-col-6">
       Data estimada de inicio:
     </div>
     <div class="p-col-6">
-      {{orderDetail.planningModel.estimatedStartDate | date: "medium"}}
+      {{orderDetail.planningModel?.estimatedStartDate | date: "medium"}}
     </div>
     <div class="p-col-6">
       Data estimada de terminação:
     </div>
     <div class="p-col-6">
-      {{orderDetail.planningModel.estimatedEndDate | date: "medium"}}
+      {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}
     </div>
     <div class="p-col-12" style="text-align: end">
       <p-button label="Cancelar OS"
@@ -91,4 +177,4 @@
       </p-button>
     </div>
   </div>
-</ng-container>
+</ng-container>-->

@@ -5,7 +5,6 @@ import {OrderDetailModel} from './model/order-detail.model';
 
 declare var ZAFClient: any;
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,8 +14,19 @@ export class AppComponent implements OnInit {
   title = 'zendesk-integration';
   appStatus = 'loading';
   orderDetail: OrderDetailModel;
-  public origin: any;
-  public destination: any;
+  origin: any;
+  destination: any;
+  statusColor: string;
+  distanceToPoint: any;
+  durationToPoint: any;
+  markerOptions = {
+    origin: {},
+    destination: {}
+  };
+  renderOptions = {
+    suppressMarkers: true,
+    polylineOptions: { strokeColor: '#000000' }
+  };
 
   @Output() createdSuccess = new EventEmitter<any>();
 
@@ -27,7 +37,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const client = ZAFClient.init();
-
     client.metadata().then(metadata => {
       console.log(metadata.settings);
       this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
@@ -44,13 +53,30 @@ export class AppComponent implements OnInit {
 
         const ticketId = data['ticket.id'];
 
+        // get ticket information with side loading
+        client.request('/api/v2/tickets/'
+          + ticketId
+          + '.json?include=brands,permissions,users,groups,organizations,ticket_fields').then(d => {
+          // console.log(JSON.stringify(d));
+          // dados = d;
+          // passa os dados para o modal
+          // localStorage.setItem('ticket', JSON.stringify(d));
+        });
+
         this.digiteamService.getOrder(ticketId)
           .subscribe(
             result => {
               this.appStatus = 'detail';
               this.orderDetail = result;
-              this.origin = { lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude };
-              this.destination = { lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude };
+              this.orderDetail.marker = 'https://demo.digiteam.com.br/imageFile/cabed354-682f-452f-8705-cc3b55563d5a';
+              this.markerOptions.destination = {icon: this.orderDetail.marker};
+              this.statusColor = this.orderDetail.statusColor;
+              if (this.orderDetail.agentModel !== null) {
+                this.origin = {lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude};
+                this.orderDetail.agentModel.markerUrl = 'https://demo.digiteam.com.br/imageFile/f7b04241-456e-49c8-ab0b-f7ba1241cd9f';
+                this.markerOptions.origin = {icon: this.orderDetail.agentModel.markerUrl};
+              }
+              this.destination = {lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude};
             },
             error => {
               this.appStatus = 'create';
@@ -74,8 +100,11 @@ export class AppComponent implements OnInit {
           result => {
             this.appStatus = 'detail';
             this.orderDetail = result;
-            this.origin = { lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude };
-            this.destination = { lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude };
+            this.statusColor = this.orderDetail.statusColor;
+            if (this.orderDetail.agentModel !== null) {
+              this.origin = {lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude};
+            }
+            this.destination = {lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude};
           },
           error => {
             this.appStatus = 'create';
@@ -113,5 +142,26 @@ export class AppComponent implements OnInit {
         detail: 'Error criando a OS.'
       });
     });
+  }
+
+  public onResponse(event: any) {
+    if (event === undefined || event.routes == null || event.routes.length === 0) {
+      return;
+    }
+    const legs = event.routes[0].legs;
+
+    if (legs != null && legs.length > 0) {
+      this.distanceToPoint = legs[0].distance;
+
+      const duration = legs[0].duration;
+
+      if (duration != null && duration.value != null) {
+        const dt = new Date();
+        dt.setSeconds(dt.getSeconds() + duration.value);
+        duration.value = dt;
+      }
+
+      this.durationToPoint = duration;
+    }
   }
 }

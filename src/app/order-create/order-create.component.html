@@ -18,7 +18,7 @@
                     placeholder="Tipo de OS"
                     formControlName="orderType"
                     required="true"
-                    [style]="{'width': '100%'}"
+                    [style]="{'width': '100%', 'font-size': '12px'}"
                     [filter]="true">
         </p-dropdown>
       </div>
@@ -80,7 +80,7 @@
         </agm-map>
       </div>
       <div class="p-col-12" style="text-align: end">
-        <p-button label="Criar OS" type="submit"></p-button>
+        <p-button label="Criar OS" type="submit" [disabled]="!createForm.valid"></p-button>
       </div>
     </div>
   </div>
