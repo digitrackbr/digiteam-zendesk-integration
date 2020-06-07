@@ -2,9 +2,9 @@ import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/c
 import {DigiteamService} from '../service/digiteam.service';
 import {MessageService, SelectItem} from 'primeng';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {OrderTypeModel} from '../model/order-type.model';
 
 declare var ZAFClient: any;
-
 declare var google: any;
 
 @Component({
@@ -13,7 +13,6 @@ declare var google: any;
   styleUrls: ['./order-create.component.css']
 })
 export class OrderCreateComponent implements AfterViewInit, OnInit {
-  title = 'zendesk-integration';
   createForm: FormGroup;
   ticketStatus: string;
   ticketId: string;
@@ -25,21 +24,40 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   state: string;
   country: string;
   ticketRequesterName: string;
-  orderTypeList: SelectItem[];
-  regionsList: SelectItem[];
-  unitsList: SelectItem[];
   zoom = 12;
   latitude = -15.77972;
   longitude = -47.92972;
   phone: number;
-  @Output() createdSuccess = new EventEmitter<any>();
+  points: any[] = [];
+
+  orderTypeList: SelectItem[];
+  orderType: OrderTypeModel;
+  orderTypeName: string;
+
+  unitsList: SelectItem[];
+  unitName: string;
+  unit = {
+    id: null,
+    name: null
+  };
+
+  regionsList: SelectItem[];
+  region = {
+    id: null,
+    name: null
+  };
 
   priorityList: SelectItem[] = [
     {label: 'Baixa', value: 1},
     {label: 'Normal', value: 2},
     {label: 'Alta', value: 3},
   ];
-  points: any[] = [];
+  priorityName: string;
+  priority = {
+    id: null,
+    name: null
+  };
+  @Output() createdSuccess = new EventEmitter<any>();
 
   constructor(
     private messageService: MessageService,
@@ -48,11 +66,44 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   ) {
   }
 
+  ngOnInit(): void {
+    this.digiteamService.getOrderTypes().subscribe(
+      (result) => {
+        this.orderTypeList = result.map(r => {
+          return {label: r.value, value: r.key};
+        });
+      },
+      () => {
+      }
+    );
+
+    this.digiteamService.getRegions().subscribe(
+      result => {
+        this.regionsList = result.map(r => {
+          return {label: r.value, value: r.key};
+        });
+      },
+      () => {
+      }
+    );
+    this.digiteamService.getUnits().subscribe(
+      result => {
+        this.unitsList = result.map(r => {
+          return {label: r.value, value: r.key};
+        });
+      },
+      () => {
+      }
+    );
+
+    this.buildForm();
+  }
+
   ngAfterViewInit(): void {
     console.log('ngAfterViewInit');
     const client = ZAFClient.init();
     client.get(['ticket']).then((data) => {
-      const ticket = data['ticket'];
+      const ticket = data.ticket;
       this.ticketId = ticket.id;
       this.ticketStatus = ticket.status;
       const requester = ticket.requester;
@@ -63,56 +114,80 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
           return;
         }
       });
-    });
-    this.getPosition();
-  }
-
-  ngOnInit(): void {
-
-    this.digiteamService.getOrderTypes().subscribe(
-      (result) => {
-        this.orderTypeList = result.map(r => {
-          return {label: r.value, value: r.key};
+      client.request('/api/v2/tickets/'
+        + ticket.id
+        + '.json?include=brands,permissions,users,groups,organizations,ticket_fields')
+        .then(d => {
+          d.ticket.custom_fields.forEach((cf) => {
+            if (cf.id === 360031892932) {
+              this.setOrderType(cf.value);
+            } else if (cf.id === 360031957771) {
+              this.setUnit(cf.value);
+            } else if (cf.id === 360032107572) {
+              this.setPriority(cf.value);
+            } else if (cf.id === 360031892872) {
+              this.address = cf.value;
+              this.createForm.value.address = cf.value;
+              this.handleGeocode();
+            }
+          });
         });
-      },
-      error => {
-      }
-    );
-
-    this.digiteamService.getRegions().subscribe(
-      result => {
-        this.regionsList = result.map(r => {
-          return {label: r.value, value: r.key};
-        });
-      },
-      error => {
-      }
-    );
-    this.digiteamService.getUnits().subscribe(
-      result => {
-        this.unitsList = result.map(r => {
-          return {label: r.value, value: r.key};
-        });
-      },
-      error => {
-      }
-    );
-
-    this.buildForm();
-  }
-
-  private buildForm() {
-    this.createForm = this.fb.group({
-      region: new FormControl('', Validators.required),
-      unit: new FormControl('', Validators.required),
-      orderType: new FormControl('', Validators.required),
-      phone: new FormControl('', Validators.required),
-      address: new FormControl('', Validators.required),
-      priority: new FormControl('', Validators.required)
     });
   }
 
-  mapClicked($event: any) {
+  onCreate() {
+    if (this.createForm.valid) {
+      this.digiteamService.createOrder({
+        requestCode: this.ticketId,
+        orderTypeId: this.orderType.id,
+        regionId: this.createForm.value.region,
+        applicantName: this.ticketRequesterName,
+        applicantPhone: this.createForm.value.phone,
+        lat: this.points[0].lat,
+        lng: this.points[0].lng,
+        priority: this.priority.id,
+        address: this.address,
+        street: this.street,
+        neighborhood: this.neighborhood,
+        postalCode: this.postalCode,
+        city: this.city,
+        state: this.state,
+        country: this.country,
+        unitId: this.unit.id
+      }).subscribe(
+        () => {
+          this.createdSuccess.emit(null);
+        },
+        () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error criando a OS.'
+          });
+        }
+      );
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Invalid. Campos obrigatórios'
+      });
+    }
+  }
+
+  onChangeOrderType($event: any) {
+    this.setOrderType($event.value);
+  }
+
+  onChangeUnit($event: any) {
+    this.setUnit($event.value);
+  }
+
+  onChangePriority($event: any) {
+    this.setPriority($event.value);
+  }
+
+  onMapClicked($event: any) {
     console.log($event);
     this.points = [];
     this.points.push({
@@ -150,51 +225,11 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
     console.log(this.points);
   }
 
-  onCreateFormSubmit() {
-    if (this.createForm.valid) {
-      this.digiteamService.createOrder({
-        requestCode: this.ticketId,
-        orderTypeId: this.createForm.value.orderType,
-        regionId: this.createForm.value.region,
-        applicantName: this.ticketRequesterName,
-        applicantPhone: this.createForm.value.phone,
-        lat: this.points[0].lat,
-        lng: this.points[0].lng,
-        priority: this.createForm.value.priority,
-        address: this.address,
-        street: this.street,
-        neighborhood: this.neighborhood,
-        postalCode: this.postalCode,
-        city: this.city,
-        state: this.state,
-        country: this.country,
-        unitId: this.createForm.value.unit
-      }).subscribe(
-        result => {
-          this.createdSuccess.emit(null);
-        },
-        error => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Error criando a OS.'
-          });
-        }
-      );
-    } else {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Invalid. Campos obrigatórios'
-      });
-    }
+  onMapDragEndMarker($event: any) {
+    this.onMapClicked($event);
   }
 
-  mapDragEndMarker($event: any) {
-    this.mapClicked($event);
-  }
-
-  onEnter($event: any) {
+  handleGeocode() {
     const geocoder = new google.maps.Geocoder();
     this.points = [];
     geocoder.geocode({address: this.createForm.value.address}, (results, status) => {
@@ -228,16 +263,68 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
     });
   }
 
-  getPosition(): Promise<any> {
-    return new Promise((resolve, reject) => {
+  handleEditOrderType() {
+    this.orderType = null;
+  }
 
-      navigator.geolocation.getCurrentPosition(resp => {
-          this.latitude = resp.coords.latitude;
-          this.longitude = resp.coords.longitude;
-        },
-        err => {
-          reject(err);
-        });
+  handleEditUnit() {
+    this.unit = null;
+  }
+
+  handleEditPriority() {
+    this.priority = null;
+  }
+
+  private buildForm() {
+    this.createForm = this.fb.group({
+      region: new FormControl('', Validators.required),
+      unit: new FormControl('', Validators.required),
+      orderType: new FormControl('', Validators.required),
+      phone: new FormControl('', Validators.required),
+      address: new FormControl('', Validators.required),
+      priority: new FormControl('', Validators.required)
     });
+  }
+
+  private setOrderType(id) {
+    this.orderType = null;
+    if (id === null) {
+      return;
+    }
+    const a = this.orderTypeList.find(x => x.value === Number(id));
+    if (a === null || a === undefined) {
+      return;
+    }
+    this.createForm.value.orderType = a.label;
+    this.orderTypeName = a.label;
+    this.orderType = {id: a.value, name: a.label};
+  }
+
+  private setUnit(id) {
+    this.unit = null;
+    if (id === null) {
+      return;
+    }
+    const a = this.unitsList.find(x => x.value === Number(id));
+    if (a === null || a === undefined) {
+      return;
+    }
+    this.createForm.value.unit = a.label;
+    this.unitName = a.label;
+    this.unit = {id: a.value, name: a.label};
+  }
+
+  private setPriority(id) {
+    this.priority = null;
+    if (id === null) {
+      return;
+    }
+    const a = this.priorityList.find(x => x.value === Number(id));
+    if (a === null || a === undefined) {
+      return;
+    }
+    this.createForm.value.priority = a.label;
+    this.priorityName = a.label;
+    this.priority = {id: a.value, name: a.label};
   }
 }

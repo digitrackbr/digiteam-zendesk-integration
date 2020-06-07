@@ -1,10 +1,15 @@
 <p-toast></p-toast>
-<form (ngSubmit)="onCreateFormSubmit()"
+<form (ngSubmit)="onCreate()"
       [formGroup]="createForm">
   <div>
     <div class="p-grid forms-grid">
       <div class="p-col-12 p-md-6">
-        {{ticketRequesterName}}
+        <span style="font-stretch: condensed">{{ticketRequesterName}}</span>
+      <hr/>
+      </div>
+      <!--PHONE-->
+      <div class="p-col-12 p-md-6">
+        Telefone
       </div>
       <div class="p-col-12">
         <input pInputText
@@ -13,32 +18,96 @@
                formControlName="phone"
                placeholder="Telefone">
       </div>
+      <!--ORDER TYPE-->
       <div class="p-col-12 p-md-6">
+        Tipo de OS
+      </div>
+      <div class="p-col-12" *ngIf="orderType === null">
         <p-dropdown [options]="orderTypeList"
                     placeholder="Tipo de OS"
                     formControlName="orderType"
                     required="true"
                     [style]="{'width': '100%', 'font-size': '12px'}"
+                    (onChange)="onChangeOrderType($event)"
                     [filter]="true">
         </p-dropdown>
       </div>
-      <div class="p-col-12">
+      <div class="p-col-12" *ngIf="orderType !== null">
+        <div class="ui-inputgroup">
+        <input pInputText
+               formControlName="orderType"
+               ngModel="{{orderTypeName}}"
+               [style]="{'width': '100%'}"
+               disabled="true">
+          <button pButton
+                  (click)="handleEditOrderType()"
+                  type="button"
+                  icon="pi pi-pencil"
+                  class="ui-button-warn">
+          </button>
+      </div>
+      </div>
+      <!--PRIORITY-->
+      <div class="p-col-12 p-md-6">
+        Priority
+      </div>
+      <div class="p-col-12" *ngIf="priority === null">
         <p-dropdown [options]="priorityList"
                     placeholder="Prioridade"
                     formControlName="priority"
                     [style]="{'width': '100%'}"
                     [filter]="true"
+                    (onChange)="onChangePriority($event)"
                     required="true">
         </p-dropdown>
       </div>
-      <div class="p-col-12">
+      <div class="p-col-12" *ngIf="priority !== null">
+        <div class="ui-inputgroup">
+          <input pInputText
+                 formControlName="priority"
+                 ngModel="{{priorityName}}"
+                 [style]="{'width': '100%'}"
+                 disabled="true">
+          <button pButton
+                  (click)="handleEditPriority()"
+                  type="button"
+                  icon="pi pi-pencil"
+                  class="ui-button-warn">
+          </button>
+        </div>
+      </div>
+      <!--UNIT-->
+      <div class="p-col-12 p-md-6">
+        Unidade
+      </div>
+      <div class="p-col-12" *ngIf="unit === null">
         <p-dropdown [options]="unitsList"
                     required="true"
                     placeholder="Unidade"
                     [filter]="true"
                     [style]="{'width': '100%'}"
+                    (onChange)="onChangeUnit($event)"
                     formControlName="unit">
         </p-dropdown>
+      </div>
+      <div class="p-col-12" *ngIf="unit !== null">
+        <div class="ui-inputgroup">
+          <input pInputText
+                 formControlName="unit"
+                 ngModel="{{unitName}}"
+                 [style]="{'width': '100%'}"
+                 disabled="true">
+          <button pButton
+                  (click)="handleEditUnit()"
+                  type="button"
+                  icon="pi pi-pencil"
+                  class="ui-button-warn">
+          </button>
+        </div>
+      </div>
+      <!--REGION-->
+      <div class="p-col-12 p-md-6">
+        Region
       </div>
       <div class="p-col-12">
         <p-dropdown [options]="regionsList"
@@ -49,36 +118,43 @@
                     formControlName="region">
         </p-dropdown>
       </div>
+      <!--ADDRESS-->
+      <div class="p-col-12 p-md-6">
+        Address
+      </div>
       <div class="p-col-12 p-md-4">
         <div class="ui-inputgroup">
-          <input pInputText formControlName="address"
+          <input pInputText
+                 formControlName="address"
                  ngModel="{{address}}"
                  [style]="{'width': '100%'}"
                  placeholder="Endereço"
                  required="true">
           <button pButton
-                  (click)="onEnter($event)"
+                  (click)="handleGeocode()"
                   type="button"
                   icon="pi pi-map-marker"
                   class="ui-button-warn">
           </button>
         </div>
       </div>
+      <!--MAP-->
       <div class="p-col-12">
         <agm-map [latitude]="latitude"
                  style="height: 300px; width: 100%"
                  [longitude]="longitude"
                  [zoom]="zoom"
-                 (mapClick)="mapClicked($event)"
+                 (mapClick)="onMapClicked($event)"
                  [panControl]="true">
           <agm-marker *ngFor="let point of points"
                       [latitude]="point.lat"
                       [longitude]="point.lng"
                       [markerDraggable]="true"
-                      (dragEnd)="mapDragEndMarker($event)">
+                      (dragEnd)="onMapDragEndMarker($event)">
           </agm-marker>
         </agm-map>
       </div>
+      <!--BUTTON-->
       <div class="p-col-12" style="text-align: end">
         <p-button label="Criar OS" type="submit" [disabled]="!createForm.valid"></p-button>
       </div>

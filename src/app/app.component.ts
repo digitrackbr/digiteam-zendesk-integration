@@ -48,67 +48,38 @@ export class AppComponent implements OnInit {
 
   init() {
     if (this.digiteamService.isLoggedIn()) {
-      const client = ZAFClient.init();
-      client.get('ticket.id').then(data => {
-
-        const ticketId = data['ticket.id'];
-
-        // get ticket information with side loading
-        client.request('/api/v2/tickets/'
-          + ticketId
-          + '.json?include=brands,permissions,users,groups,organizations,ticket_fields').then(d => {
-          // console.log(JSON.stringify(d));
-          // dados = d;
-          // passa os dados para o modal
-          // localStorage.setItem('ticket', JSON.stringify(d));
-        });
-
-        this.digiteamService.getOrder(ticketId)
-          .subscribe(
-            result => {
-              this.appStatus = 'detail';
-              this.orderDetail = result;
-              this.markerOptions.destination = {icon: this.orderDetail.marker};
-              this.statusColor = this.orderDetail.statusColor;
-              if (this.orderDetail.agentModel !== null) {
-                this.origin = {lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude};
-                this.markerOptions.origin = {icon: this.orderDetail.agentModel.markerUrl};
-              }
-              this.destination = {lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude};
-            },
-            error => {
-              this.appStatus = 'create';
-            }
-          );
-      });
+      this.getOrderDetails();
     } else {
       this.appStatus = 'login';
     }
   }
 
-  onLoginSuccess($event: any) {
-
+  private getOrderDetails() {
     const client = ZAFClient.init();
-
     client.get('ticket.id').then((data) => {
       const ticketId = data['ticket.id'];
-
       this.digiteamService.getOrder(ticketId)
         .subscribe(
           result => {
             this.appStatus = 'detail';
             this.orderDetail = result;
+            this.markerOptions.destination = {icon: this.orderDetail.marker};
             this.statusColor = this.orderDetail.statusColor;
             if (this.orderDetail.agentModel !== null) {
               this.origin = {lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude};
+              this.markerOptions.origin = {icon: this.orderDetail.agentModel.markerUrl};
             }
             this.destination = {lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude};
           },
-          error => {
+          () => {
             this.appStatus = 'create';
           }
         );
     });
+  }
+
+  onLoginSuccess($event: any) {
+    this.getOrderDetails();
   }
 
   onCreatedSuccess($event: any) {
@@ -122,18 +93,9 @@ export class AppComponent implements OnInit {
   }
 
   onCancelOrder($event: any) {
-    this.digiteamService.cancelOrder(this.orderDetail.code).subscribe(result => {
-      this.digiteamService.getOrder(this.orderDetail.code)
-        .subscribe(
-          r => {
-            this.appStatus = 'detail';
-            this.orderDetail = r;
-          },
-          error => {
-            this.appStatus = 'cancel';
-          }
-        );
-    }, error => {
+    this.digiteamService.cancelOrder(this.orderDetail.code).subscribe(() => {
+      this.getOrderDetails();
+    }, () => {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
