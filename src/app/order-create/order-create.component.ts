@@ -28,6 +28,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   latitude = -15.77972;
   longitude = -47.92972;
   phone: number;
+  description: string;
   points: any[] = [];
 
   orderTypeList: SelectItem[];
@@ -37,12 +38,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   unitsList: SelectItem[];
   unitName: string;
   unit = {
-    id: null,
-    name: null
-  };
-
-  regionsList: SelectItem[];
-  region = {
     id: null,
     name: null
   };
@@ -77,15 +72,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
       }
     );
 
-    this.digiteamService.getRegions().subscribe(
-      result => {
-        this.regionsList = result.map(r => {
-          return {label: r.value, value: r.key};
-        });
-      },
-      () => {
-      }
-    );
     this.digiteamService.getUnits().subscribe(
       result => {
         this.unitsList = result.map(r => {
@@ -140,7 +126,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
       this.digiteamService.createOrder({
         requestCode: this.ticketId,
         orderTypeId: this.orderType.id,
-        regionId: this.createForm.value.region,
+        regionId: null,
         applicantName: this.ticketRequesterName,
         applicantPhone: this.createForm.value.phone,
         lat: this.points[0].lat,
@@ -153,7 +139,8 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         city: this.city,
         state: this.state,
         country: this.country,
-        unitId: this.unit.id
+        unitId: this.unit.id,
+        description: this.description
       }).subscribe(
         () => {
           this.createdSuccess.emit(null);
@@ -277,7 +264,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
 
   private buildForm() {
     this.createForm = this.fb.group({
-      region: new FormControl('', Validators.required),
       unit: new FormControl('', Validators.required),
       orderType: new FormControl('', Validators.required),
       phone: new FormControl('', Validators.required),

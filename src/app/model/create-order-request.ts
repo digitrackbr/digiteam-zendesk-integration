@@ -15,4 +15,5 @@ export interface CreateOrderRequest {
   applicantPhone: string;
   lat: number;
   lng: number;
+  description: string;
 }

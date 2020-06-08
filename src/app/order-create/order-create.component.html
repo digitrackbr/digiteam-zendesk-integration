@@ -49,7 +49,7 @@
       </div>
       <!--PRIORITY-->
       <div class="p-col-12 p-md-6">
-        Priority
+        Prioridade
       </div>
       <div class="p-col-12" *ngIf="priority === null">
         <p-dropdown [options]="priorityList"
@@ -105,22 +105,9 @@
           </button>
         </div>
       </div>
-      <!--REGION-->
-      <div class="p-col-12 p-md-6">
-        Region
-      </div>
-      <div class="p-col-12">
-        <p-dropdown [options]="regionsList"
-                    placeholder="Região"
-                    required="true"
-                    [filter]="true"
-                    [style]="{'width': '100%'}"
-                    formControlName="region">
-        </p-dropdown>
-      </div>
       <!--ADDRESS-->
       <div class="p-col-12 p-md-6">
-        Address
+        Endereço
       </div>
       <div class="p-col-12 p-md-4">
         <div class="ui-inputgroup">
