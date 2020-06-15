@@ -37,15 +37,14 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const client = ZAFClient.init();
+    client.metadata().then(metadata => {
+      this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
+    });
     this.digiteamService.refresh()
       .subscribe(
         result => {
           this.digiteamService.saveRefreshInfo(result);
-          client.metadata().then(metadata => {
-            console.log(metadata.settings);
-            this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
-            this.init();
-          });
+          this.init();
         },
         error => {
           this.digiteamService.logout();
