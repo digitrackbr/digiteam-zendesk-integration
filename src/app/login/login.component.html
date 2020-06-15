@@ -1,16 +1,18 @@
 <p-toast></p-toast>
 <form (ngSubmit)="login()" [formGroup]="loginForm">
   <div class="p-grid">
-
     <div class="p-col-12" style="text-align: center">
-      <img src="assets/digiteam-logo.png" width="50">
+      <input id="username"
+             type="text"
+             pInputText
+             formControlName="username"
+             placeholder="Usuario"/>
     </div>
     <div class="p-col-12" style="text-align: center">
-      <input id="username" type="text" pInputText formControlName="username"
-             placeholder="Digite sua chave..."/>
-    </div>
-    <div class="p-col-12" style="text-align: center">
-      <input id="password" type="password" formControlName="password" placeholder="Digite sua senha..."
+      <input id="password"
+             type="password"
+             formControlName="password"
+             placeholder="Senha"
              pPassword [feedback]="false"/>
     </div>
 
@@ -22,7 +24,7 @@
       </p-button>
     </div>
     <div style="text-align: center; width: 100%; font-size: smaller">
-      v2020.06.01
+      v2020.06.15
     </div>
 
   </div>

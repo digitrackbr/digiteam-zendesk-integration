@@ -1,3 +1,5 @@
-export class RefreshToken {
+export interface RefreshToken {
+  accessToken: string;
   refreshToken: string;
+  expiredAt: number;
 }

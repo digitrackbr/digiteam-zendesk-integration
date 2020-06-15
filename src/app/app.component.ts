@@ -36,14 +36,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const refreshToken = {
-      refreshToken: this.digiteamService.refreshToken
-    };
     const client = ZAFClient.init();
-    this.digiteamService.refresh(refreshToken)
+    this.digiteamService.refresh()
       .subscribe(
         result => {
-          this.digiteamService.saveAuthInfo(result);
+          this.digiteamService.saveRefreshInfo(result);
           client.metadata().then(metadata => {
             console.log(metadata.settings);
             this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
@@ -60,7 +57,17 @@ export class AppComponent implements OnInit {
 
   init() {
     if (this.digiteamService.isLoggedIn()) {
-      this.getOrderDetails();
+      this.digiteamService.refresh()
+        .subscribe(
+          result => {
+            this.digiteamService.saveRefreshInfo(result);
+            this.getOrderDetails();
+          },
+          error => {
+            this.digiteamService.logout();
+            this.appStatus = 'login';
+          }
+        );
     } else {
       this.appStatus = 'login';
     }
@@ -82,6 +89,7 @@ export class AppComponent implements OnInit {
               this.markerOptions.origin = {icon: this.orderDetail.agentModel.markerUrl};
             }
             this.destination = {lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude};
+            this.sleepOrderDetails().then(() => this.getOrderDetails());
           },
           () => {
             this.appStatus = 'create';
@@ -143,5 +151,14 @@ export class AppComponent implements OnInit {
       || this.orderDetail.statusId === 11
       || this.orderDetail.statusId === 7
       || this.orderDetail.statusId === 14;
+  }
+
+  private async sleepOrderDetails() {
+    // Sleep thread for 30 seconds
+    await this.delay(30000);
+  }
+
+  private delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

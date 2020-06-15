@@ -15,7 +15,7 @@ import { RefreshToken } from '../model/refresh-token';
 })
 export class DigiteamService {
 
-  private tokenAuthentication = 'token_authentication';
+  private tokenName = 'user_token';
   private tokenRefresh = 'token_refresh';
   urlBaseV0 = 'http://remohml.localhost:8080';
 
@@ -36,17 +36,25 @@ export class DigiteamService {
     return this.http.post<AuthenticationToken>(`${this.tenantUrl}/api-v1/auth`, credential);
   }
 
-  public refresh(token: RefreshToken): Observable<AuthenticationToken> {
-    return this.http.post<AuthenticationToken>(`${this.tenantUrl}/api-v1/auth/refreshToken`, token);
+  public refresh(): Observable<RefreshToken> {
+    const rToken = {
+      refreshToken: this.refreshToken
+    };
+    return this.http.post<RefreshToken>(`${this.tenantUrl}/api-v1/auth/refreshToken`, rToken);
   }
 
   public saveAuthInfo(authToken: AuthenticationToken): void {
-    localStorage.setItem(this.tokenAuthentication, authToken.token);
+    localStorage.setItem(this.tokenName, authToken.token);
     localStorage.setItem(this.tokenRefresh, authToken.refreshToken);
   }
 
+  public saveRefreshInfo(refreshToken: RefreshToken): void {
+    localStorage.setItem(this.tokenName, refreshToken.accessToken);
+    localStorage.setItem(this.tokenRefresh, refreshToken.refreshToken);
+  }
+
   get token(): string {
-    return localStorage.getItem(this.tokenAuthentication);
+    return localStorage.getItem(this.tokenName);
   }
 
   get refreshToken(): string {

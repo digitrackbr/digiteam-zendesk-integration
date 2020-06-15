@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DigiteamService} from '../service/digiteam.service';
 import {MessageService} from 'primeng';
-import {Credential} from "../model/credential";
+import {Credential} from '../model/credential';
 
 @Component({
   selector: 'app-login',
