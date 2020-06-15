@@ -36,14 +36,26 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const refreshToken = {
+      refreshToken: this.digiteamService.refreshToken
+    };
     const client = ZAFClient.init();
-    client.metadata().then(metadata => {
-      console.log(metadata.settings);
-      this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
-      this.init();
-    });
-
-    client.invoke('resize', {width: '100%', height: '500px'});
+    this.digiteamService.refresh(refreshToken)
+      .subscribe(
+        result => {
+          this.digiteamService.saveAuthInfo(result);
+          client.metadata().then(metadata => {
+            console.log(metadata.settings);
+            this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
+            this.init();
+          });
+        },
+        error => {
+          this.digiteamService.logout();
+          this.appStatus = 'login';
+        }
+      );
+    client.invoke('resize', {width: '100%', height: '450px'});
   }
 
   init() {

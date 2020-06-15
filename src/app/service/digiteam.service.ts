@@ -8,13 +8,15 @@ import {CreateOrderRequest} from '../model/create-order-request';
 import {KeyValueModel} from '../model/key-value.model';
 import {AuthenticationToken} from '../model/authentication-token';
 import {Credential} from '../model/credential';
+import { RefreshToken } from '../model/refresh-token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DigiteamService {
 
-  private tokenName = 'user_token';
+  private tokenAuthentication = 'token_authentication';
+  private tokenRefresh = 'token_refresh';
   urlBaseV0 = 'http://remohml.localhost:8080';
 
   private tenantUrlHash = 'tenant_url';
@@ -34,12 +36,21 @@ export class DigiteamService {
     return this.http.post<AuthenticationToken>(`${this.tenantUrl}/api-v1/auth`, credential);
   }
 
+  public refresh(token: RefreshToken): Observable<AuthenticationToken> {
+    return this.http.post<AuthenticationToken>(`${this.tenantUrl}/api-v1/auth/refreshToken`, token);
+  }
+
   public saveAuthInfo(authToken: AuthenticationToken): void {
-    localStorage.setItem(this.tokenName, authToken.token);
+    localStorage.setItem(this.tokenAuthentication, authToken.token);
+    localStorage.setItem(this.tokenRefresh, authToken.refreshToken);
   }
 
   get token(): string {
-    return localStorage.getItem(this.tokenName);
+    return localStorage.getItem(this.tokenAuthentication);
+  }
+
+  get refreshToken(): string {
+    return localStorage.getItem(this.tokenRefresh);
   }
 
   public getOrderTypes(): Observable<KeyValueModel[]> {
@@ -79,6 +90,7 @@ export class DigiteamService {
   }
 
   public logout() {
-    localStorage.removeItem(this.tokenName);
+    localStorage.removeItem(this.token);
+    localStorage.removeItem(this.refreshToken);
   }
 }
