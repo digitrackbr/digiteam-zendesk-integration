@@ -22,7 +22,7 @@
       <div class="p-col-12 p-md-6">
         Tipo de OS
       </div>
-      <div class="p-col-12" *ngIf="orderType === null">
+      <div class="p-col-12" *ngIf="!showOrderEdit()">
         <p-dropdown [options]="orderTypeList"
                     placeholder="Tipo de OS"
                     formControlName="orderType"
@@ -32,7 +32,7 @@
                     [filter]="true">
         </p-dropdown>
       </div>
-      <div class="p-col-12" *ngIf="orderType !== null">
+      <div class="p-col-12" *ngIf="showOrderEdit()">
         <div class="ui-inputgroup">
         <input pInputText
                formControlName="orderType"
@@ -51,7 +51,7 @@
       <div class="p-col-12 p-md-6">
         Prioridade
       </div>
-      <div class="p-col-12" *ngIf="priority === null">
+      <div class="p-col-12" *ngIf="!showPriorityEdit()">
         <p-dropdown [options]="priorityList"
                     placeholder="Prioridade"
                     formControlName="priority"
@@ -61,7 +61,7 @@
                     required="true">
         </p-dropdown>
       </div>
-      <div class="p-col-12" *ngIf="priority !== null">
+      <div class="p-col-12" *ngIf="showPriorityEdit()">
         <div class="ui-inputgroup">
           <input pInputText
                  formControlName="priority"
@@ -80,7 +80,7 @@
       <div class="p-col-12 p-md-6">
         Unidade
       </div>
-      <div class="p-col-12" *ngIf="unit === null">
+      <div class="p-col-12" *ngIf="!showUnitEdit()">
         <p-dropdown [options]="unitsList"
                     required="true"
                     placeholder="Unidade"
@@ -90,7 +90,7 @@
                     formControlName="unit">
         </p-dropdown>
       </div>
-      <div class="p-col-12" *ngIf="unit !== null">
+      <div class="p-col-12" *ngIf="showUnitEdit()">
         <div class="ui-inputgroup">
           <input pInputText
                  formControlName="unit"

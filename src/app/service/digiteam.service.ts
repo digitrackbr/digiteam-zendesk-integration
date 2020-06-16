@@ -29,7 +29,7 @@ export class DigiteamService {
   }
 
   get tenantUrl(): string {
-    return localStorage.getItem(this.tenantUrlHash);
+    return localStorage.getItem(this.tenantUrlHash) || '';
   }
 
   public login(credential: Credential): Observable<AuthenticationToken> {
@@ -53,12 +53,12 @@ export class DigiteamService {
     localStorage.setItem(this.tokenRefresh, refreshToken.refreshToken);
   }
 
-  get token(): string {
-    return localStorage.getItem(this.tokenName);
+  get token(): string  {
+    return localStorage.getItem(this.tokenName)  || '';
   }
 
   get refreshToken(): string {
-    return localStorage.getItem(this.tokenRefresh);
+    return localStorage.getItem(this.tokenRefresh) || '';
   }
 
   public getOrderTypes(): Observable<KeyValueModel[]> {

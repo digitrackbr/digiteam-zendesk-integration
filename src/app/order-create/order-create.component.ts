@@ -13,44 +13,44 @@ declare var google: any;
   styleUrls: ['./order-create.component.css']
 })
 export class OrderCreateComponent implements AfterViewInit, OnInit {
-  createForm: FormGroup;
-  ticketStatus: string;
-  ticketId: string;
-  address: string;
-  street: string;
-  neighborhood: string;
-  postalCode: string;
-  city: string;
-  state: string;
-  country: string;
-  ticketRequesterName: string;
+  createForm: FormGroup | undefined;
+  ticketStatus?: string;
+  ticketId?: string;
+  address?: string;
+  street?: string;
+  neighborhood?: string;
+  postalCode?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  ticketRequesterName?: string;
   zoom = 12;
   latitude = -15.77972;
   longitude = -47.92972;
-  phone: number;
-  description: string;
-  points: any[] = [];
+  phone?: number;
+  description?: string;
+  points?: any[] = [];
 
-  orderTypeList: SelectItem[];
-  orderType: OrderTypeModel;
-  orderTypeName: string;
+  orderTypeList?: SelectItem[];
+  orderType?: OrderTypeModel;
+  orderTypeName?: string;
 
-  unitsList: SelectItem[];
-  unitName: string;
-  unit = {
-    id: null,
-    name: null
+  unitsList?: SelectItem[];
+  unitName?: string;
+  unit: { name: string | undefined; id: any } = {
+    id: 0,
+    name: undefined
   };
 
-  priorityList: SelectItem[] = [
+  priorityList?: SelectItem[] = [
     {label: 'Baixa', value: 1},
     {label: 'Normal', value: 2},
     {label: 'Alta', value: 3},
   ];
-  priorityName: string;
-  priority = {
-    id: null,
-    name: null
+  priorityName?: string;
+  priority: { name: string | undefined; id: any } = {
+    id: 0,
+    name: undefined
   };
   @Output() createdSuccess = new EventEmitter<any>();
 
@@ -59,6 +59,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
     private fb: FormBuilder,
     private digiteamService: DigiteamService
   ) {
+    this.createForm = undefined;
   }
 
   ngOnInit(): void {
@@ -88,13 +89,13 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     console.log('ngAfterViewInit');
     const client = ZAFClient.init();
-    client.get(['ticket']).then((data) => {
+    client.get(['ticket']).then((data: { ticket: any; }) => {
       const ticket = data.ticket;
       this.ticketId = ticket.id;
       this.ticketStatus = ticket.status;
       const requester = ticket.requester;
       this.ticketRequesterName = requester.name;
-      requester.identities.forEach((c) => {
+      requester.identities.forEach((c: { type: string; value: number; }) => {
         if (c.type === 'phone_number') {
           this.phone = c.value;
           return;
@@ -103,17 +104,19 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
       client.request('/api/v2/tickets/'
         + ticket.id
         + '.json?include=brands,permissions,users,groups,organizations,ticket_fields')
-        .then(d => {
-          d.ticket.custom_fields.forEach((cf) => {
+        .then((d: { ticket: { custom_fields: { forEach: (arg0: (cf: { id: number; value: string | number; }) => void) => void; }; }; }) => {
+          d.ticket.custom_fields.forEach((cf: { id: number; value: string | number; }) => {
             if (cf.id === 360031892932) {
-              this.setOrderType(cf.value);
+              this.setOrderType(cf.value as number);
             } else if (cf.id === 360031957771) {
-              this.setUnit(cf.value);
+              this.setUnit(cf.value as number);
             } else if (cf.id === 360032107572) {
-              this.setPriority(cf.value);
+              this.setPriority(cf.value as number);
             } else if (cf.id === 360031892872) {
-              this.address = cf.value;
-              this.createForm.value.address = cf.value;
+              this.address = cf.value as string;
+              if (this.createForm) {
+                this.createForm.value.address = cf.value;
+              }
               this.handleGeocode();
             }
           });
@@ -122,16 +125,16 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   }
 
   onCreate() {
-    if (this.createForm.valid) {
+    if (this.createForm && this.createForm.valid) {
       this.digiteamService.createOrder({
         requestCode: this.ticketId,
-        orderTypeId: this.orderType.id,
-        regionId: null,
+        orderTypeId: this.orderType === undefined ? undefined : this.orderType.id,
+        regionId: undefined,
         applicantName: this.ticketRequesterName,
-        applicantPhone: this.createForm.value.phone,
-        lat: this.points[0].lat,
-        lng: this.points[0].lng,
-        priority: this.priority.id,
+        applicantPhone: this.createForm ? this.createForm.value.phone : null,
+        lat: this.points === undefined ? undefined : this.points[0].lat,
+        lng: this.points === undefined ? undefined : this.points[0].lng,
+        priority: this.priority === undefined ? undefined : this.priority.id,
         address: this.address,
         street: this.street,
         neighborhood: this.neighborhood,
@@ -139,7 +142,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         city: this.city,
         state: this.state,
         country: this.country,
-        unitId: this.unit.id,
+        unitId: this.unit === undefined ? undefined : this.unit.id,
         description: this.description
       }).subscribe(
         () => {
@@ -184,7 +187,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
 
     const geocoder = new google.maps.Geocoder();
 
-    geocoder.geocode({location: {lat: $event.coords.lat, lng: $event.coords.lng}}, (results, status) => {
+    geocoder.geocode({location: {lat: $event.coords.lat, lng: $event.coords.lng}}, (results: any[], status: string) => {
       console.log('STATUS: ' + status);
 
       if (status === 'OK') {
@@ -192,7 +195,7 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
         this.address = results[0].formatted_address;
         const place = results[0];
 
-        place.address_components.forEach((component) => {
+        place.address_components.forEach((component: { types: string[]; short_name: string; }) => {
           if (component.types[0] === 'country') {
             this.country = component.short_name;
           } else if (component.types[0] === 'administrative_area_level_1') {
@@ -219,19 +222,22 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   handleGeocode() {
     const geocoder = new google.maps.Geocoder();
     this.points = [];
-    geocoder.geocode({address: this.createForm.value.address}, (results, status) => {
+    geocoder.geocode({address: this.createForm ? this.createForm.value.address : null}, (results: any[], status: string) => {
       if (status === 'OK') {
         this.zoom = 15;
         const place = results[0];
         this.address = place.formatted_address;
         this.latitude = place.geometry.location.lat();
         this.longitude = place.geometry.location.lng();
-        this.points.push({
-          lat: this.latitude,
-          lng: this.longitude
-        });
 
-        place.address_components.forEach((component) => {
+        if (this.points !== null && this.points !== undefined) {
+          this.points.push({
+            lat: this.latitude,
+            lng: this.longitude
+          });
+        }
+
+        place.address_components.forEach((component: { types: string[]; short_name: string; }) => {
           if (component.types[0] === 'country') {
             this.country = component.short_name;
           } else if (component.types[0] === 'administrative_area_level_1') {
@@ -251,15 +257,33 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   }
 
   handleEditOrderType() {
-    this.orderType = null;
+    this.orderType = undefined;
+  }
+
+  showOrderEdit() {
+    return this.orderType !== undefined;
   }
 
   handleEditUnit() {
-    this.unit = null;
+    this.unit = {
+      id: 0,
+      name: undefined
+    };
+  }
+
+  showUnitEdit() {
+    return this.unit !== undefined && this.unit.id > 0 && this.unit.name !== undefined;
   }
 
   handleEditPriority() {
-    this.priority = null;
+    this.priority = {
+      id: 0,
+      name: undefined
+    };
+  }
+
+  showPriorityEdit() {
+    return this.priority !== undefined && this.priority.id > 0 && this.priority.name !== undefined;
   }
 
   private buildForm() {
@@ -272,44 +296,56 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
     });
   }
 
-  private setOrderType(id) {
-    this.orderType = null;
-    if (id === null) {
+  private setOrderType(id: number) {
+    this.orderType = undefined;
+    if (id === null || this.orderTypeList === null || this.orderTypeList === undefined) {
       return;
     }
     const a = this.orderTypeList.find(x => x.value === Number(id));
     if (a === null || a === undefined) {
       return;
     }
-    this.createForm.value.orderType = a.label;
+    if (this.createForm) {
+      this.createForm.value.orderType = a.label;
+    }
     this.orderTypeName = a.label;
     this.orderType = {id: a.value, name: a.label};
   }
 
-  private setUnit(id) {
-    this.unit = null;
-    if (id === null) {
+  private setUnit(id: number) {
+    this.unit = {
+      id: 0,
+      name: undefined
+    };
+    if (id === null || this.unitsList === null || this.unitsList === undefined) {
       return;
     }
     const a = this.unitsList.find(x => x.value === Number(id));
     if (a === null || a === undefined) {
       return;
     }
-    this.createForm.value.unit = a.label;
+    if (this.createForm) {
+      this.createForm.value.unit = a.label;
+    }
     this.unitName = a.label;
     this.unit = {id: a.value, name: a.label};
   }
 
-  private setPriority(id) {
-    this.priority = null;
-    if (id === null) {
+  private setPriority(id: number) {
+    this.priority = {
+      id: 0,
+      name: undefined
+    };
+    if (id === null || this.priorityList === null || this.priorityList === undefined) {
       return;
     }
     const a = this.priorityList.find(x => x.value === Number(id));
     if (a === null || a === undefined) {
       return;
     }
-    this.createForm.value.priority = a.label;
+    if (this.createForm) {
+      this.createForm.value.priority = a.label;
+    }
     this.priorityName = a.label;
     this.priority = {id: a.value, name: a.label};
   }

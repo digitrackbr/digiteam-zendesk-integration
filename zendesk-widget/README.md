@@ -16,3 +16,4 @@ Please submit bug reports to [Insert Link](). Pull requests are welcome.
 
 
 "ticket_sidebar": "https://zendeskapp.s3.sa-east-1.amazonaws.com/index.html"
+"ticket_sidebar_local": "http://localhost:4200/index.html"

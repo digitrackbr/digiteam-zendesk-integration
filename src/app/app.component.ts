@@ -1,9 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, enableProdMode, EventEmitter, OnInit, Output} from '@angular/core';
 import {DigiteamService} from './service/digiteam.service';
 import {MessageService} from 'primeng';
 import {OrderDetailModel} from './model/order-detail.model';
 
 declare var ZAFClient: any;
+
+enableProdMode();
 
 @Component({
   selector: 'app-root',
@@ -11,12 +13,11 @@ declare var ZAFClient: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'zendesk-integration';
   appStatus = 'loading';
-  orderDetail: OrderDetailModel;
+  orderDetail: OrderDetailModel = {};
   origin: any;
   destination: any;
-  statusColor: string;
+  statusColor: string | undefined;
   distanceToPoint: any;
   durationToPoint: any;
   markerOptions = {
@@ -37,7 +38,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const client = ZAFClient.init();
-    client.metadata().then(metadata => {
+    client.metadata().then((metadata: { settings: { digiteam_url: string; }; }) => {
       this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
     });
     this.digiteamService.refresh()
@@ -46,7 +47,7 @@ export class AppComponent implements OnInit {
           this.digiteamService.saveRefreshInfo(result);
           this.init();
         },
-        error => {
+        () => {
           this.digiteamService.logout();
           this.appStatus = 'login';
         }
@@ -62,7 +63,7 @@ export class AppComponent implements OnInit {
             this.digiteamService.saveRefreshInfo(result);
             this.getOrderDetails();
           },
-          error => {
+          () => {
             this.digiteamService.logout();
             this.appStatus = 'login';
           }
@@ -74,7 +75,7 @@ export class AppComponent implements OnInit {
 
   private getOrderDetails() {
     const client = ZAFClient.init();
-    client.get('ticket.id').then((data) => {
+    client.get('ticket.id').then((data: { [x: string]: any; }) => {
       const ticketId = data['ticket.id'];
       this.digiteamService.getOrder(ticketId)
         .subscribe(
@@ -83,11 +84,15 @@ export class AppComponent implements OnInit {
             this.orderDetail = result;
             this.markerOptions.destination = {icon: this.orderDetail.marker};
             this.statusColor = this.orderDetail.statusColor;
-            if (this.orderDetail.agentModel !== null) {
-              this.origin = {lat: this.orderDetail.agentModel.latitude, lng: this.orderDetail.agentModel.longitude};
-              this.markerOptions.origin = {icon: this.orderDetail.agentModel.markerUrl};
-            }
-            this.destination = {lat: this.orderDetail.whereis.latitude, lng: this.orderDetail.whereis.longitude};
+            this.origin = {
+              lat: this.orderDetail.agentModel ? this.orderDetail.agentModel.latitude : null,
+              lng: this.orderDetail.agentModel ? this.orderDetail.agentModel.longitude : null
+            };
+            this.markerOptions.origin = {icon: this.orderDetail.agentModel ? this.orderDetail.agentModel.markerUrl : null};
+            this.destination = {
+              lat: this.orderDetail.whereis ? this.orderDetail.whereis.latitude : null,
+              lng: this.orderDetail.whereis ? this.orderDetail.whereis.longitude : null
+            };
             this.sleepOrderDetails().then(() => this.getOrderDetails());
           },
           () => {
@@ -98,6 +103,7 @@ export class AppComponent implements OnInit {
   }
 
   onLoginSuccess($event: any) {
+    console.log($event);
     this.getOrderDetails();
   }
 
@@ -105,22 +111,19 @@ export class AppComponent implements OnInit {
     this.onLoginSuccess($event);
   }
 
-  logout($event: MouseEvent) {
-    this.digiteamService.logout();
-    this.appStatus = 'login';
-    $event.preventDefault();
-  }
-
   onCancelOrder($event: any) {
-    this.digiteamService.cancelOrder(this.orderDetail.code).subscribe(() => {
-      this.getOrderDetails();
-    }, () => {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Error criando a OS.'
+    console.log($event);
+    if (this.orderDetail.code != null) {
+      this.digiteamService.cancelOrder(this.orderDetail.code).subscribe(() => {
+        this.getOrderDetails();
+      }, () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error criando a OS.'
+        });
       });
-    });
+    }
   }
 
   onResponse(event: any) {

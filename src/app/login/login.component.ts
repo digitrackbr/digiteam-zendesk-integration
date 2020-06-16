@@ -4,6 +4,8 @@ import {DigiteamService} from '../service/digiteam.service';
 import {MessageService} from 'primeng';
 import {Credential} from '../model/credential';
 
+declare var defaultInit: any;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,7 +13,7 @@ import {Credential} from '../model/credential';
 })
 export class LoginComponent implements OnInit {
 
-  loginForm: FormGroup;
+  loginForm: FormGroup | undefined;
   @Output() loginSuccess = new EventEmitter<any>();
 
   constructor(
@@ -19,6 +21,7 @@ export class LoginComponent implements OnInit {
     private digiteamService: DigiteamService,
     private messageService: MessageService
   ) {
+    this.loginForm = undefined;
   }
 
   ngOnInit() {
@@ -34,7 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    if (this.loginForm.valid) {
+    if (this.loginForm && this.loginForm.valid) {
 
       this.digiteamService.login(this.credentials)
         .subscribe(
@@ -54,6 +57,6 @@ export class LoginComponent implements OnInit {
   }
 
   private get credentials(): Credential {
-    return this.loginForm.value;
+    return this.loginForm ? this.loginForm.value : null;
   }
 }

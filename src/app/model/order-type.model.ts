@@ -1,4 +1,4 @@
 export interface OrderTypeModel {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
 }
