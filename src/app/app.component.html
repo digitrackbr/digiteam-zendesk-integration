@@ -31,7 +31,7 @@
           </tr>
         </table>
         <div class="p-col-12">
-          {{orderDetail.orderType.name}}
+          {{orderDetail.orderType?.name}}
         </div>
         <div class="p-col-12">
           Número do OS: {{orderDetail.code}}
@@ -40,8 +40,8 @@
           Data de conclusão: {{orderDetail.dueDate | date : 'medium'}}
         </div>
         <div class="p-col-12" *ngIf="orderDetail.statusId === 8">
-          <agm-map [latitude]="orderDetail?.whereis.latitude"
-                   [longitude]="orderDetail?.whereis.longitude"
+          <agm-map [latitude]="orderDetail?.whereis?.latitude"
+                   [longitude]="orderDetail?.whereis?.longitude"
                    style="height: 300px; width: 100%"
                    disableDefaultUI="true"
                    gestureHandling="none">
