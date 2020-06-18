@@ -1,0 +1,21 @@
+{
+  "LOGIN": {
+    "USERNAME": "Usuario",
+    "PASSWORD": "Contraseña",
+    "BUTTON_LOGIN": "Entrar"
+  },
+  "CREATE": {
+    "PHONE": "Teléfono",
+    "ORDER_TYPE": "Tipo de orden",
+    "PRIORITY": "Prioridad",
+    "UNIT": "Unidad",
+    "ADDRESS": "Dirección",
+    "BUTTON_CREATE": "Crear"
+  },
+  "DETAILS": {
+    "CODE": "Código OS",
+    "CONCLUSION_DATE": "Fecha de conclusión",
+    "ATTENDANCE": "Asistencia",
+    "BUTTON_CANCEL": "Cancelar OS"
+  }
+}

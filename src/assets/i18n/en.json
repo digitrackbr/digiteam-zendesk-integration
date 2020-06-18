@@ -1,0 +1,22 @@
+{
+  "LOGIN": {
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "BUTTON_LOGIN": "Enter"
+  },
+  "CREATE": {
+    "PHONE": "Phone",
+    "ORDER_TYPE": "Order type",
+    "PRIORITY": "Priority",
+    "UNIT": "Unit",
+    "ADDRESS": "Address",
+    "BUTTON_CREATE": "Create"
+  },
+  "DETAILS": {
+    "CODE": "Code OS",
+    "CONCLUSION_DATE": "Conclusion date",
+    "ATTENDANCE": "Attendance",
+    "BUTTON_CANCEL": "Cancel OS"
+  }
+}
+

@@ -9,7 +9,7 @@
       </div>
       <!--PHONE-->
       <div class="p-col-12 p-md-6">
-        Telefone
+        {{ 'CREATE.PHONE' | translate }}
       </div>
       <div class="p-col-12">
         <input pInputText
@@ -20,7 +20,7 @@
       </div>
       <!--ORDER TYPE-->
       <div class="p-col-12 p-md-6">
-        Tipo de OS
+        {{ 'CREATE.ORDER_TYPE' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showOrderEdit()">
         <p-dropdown [options]="orderTypeList"
@@ -49,7 +49,7 @@
       </div>
       <!--PRIORITY-->
       <div class="p-col-12 p-md-6">
-        Prioridade
+        {{ 'CREATE.PRIORITY' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showPriorityEdit()">
         <p-dropdown [options]="priorityList"
@@ -78,7 +78,7 @@
       </div>
       <!--UNIT-->
       <div class="p-col-12 p-md-6">
-        Unidade
+        {{ 'CREATE.UNIT' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showUnitEdit()">
         <p-dropdown [options]="unitsList"
@@ -107,7 +107,7 @@
       </div>
       <!--ADDRESS-->
       <div class="p-col-12 p-md-6">
-        Endereço
+        {{ 'CREATE.ADDRESS' | translate }}
       </div>
       <div class="p-col-12 p-md-4">
         <div class="ui-inputgroup">
@@ -143,7 +143,10 @@
       </div>
       <!--BUTTON-->
       <div class="p-col-12" style="text-align: end">
-        <p-button label="Criar OS" type="submit" [disabled]="!createForm?.valid"></p-button>
+        <p-button label="{{ 'CREATE.BUTTON_CREATE' | translate }}"
+                  type="submit"
+                  [disabled]="!createForm?.valid">
+        </p-button>
       </div>
     </div>
   </div>

@@ -13,14 +13,20 @@ import {
     ToastModule
 } from 'primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {AuthInterceptor} from './helper/auth.interceptor';
 import {AgmCoreModule} from '@agm/core';
 import {LoginComponent} from './login/login.component';
 import {OrderCreateComponent} from './order-create/order-create.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AgmDirectionModule} from 'agm-direction';
-import {AgmOverlays} from "agm-overlays";
+import {AgmOverlays} from 'agm-overlays';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -48,6 +54,14 @@ import {AgmOverlays} from "agm-overlays";
     AgmDirectionModule,
     CardModule,
     AgmOverlays,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      },
+      defaultLanguage: 'en'
+    })
   ],
   providers: [
     {

@@ -2,6 +2,7 @@ import {Component, enableProdMode, EventEmitter, OnInit, Output} from '@angular/
 import {DigiteamService} from './service/digiteam.service';
 import {MessageService} from 'primeng';
 import {OrderDetailModel} from './model/order-detail.model';
+import {TranslateService} from '@ngx-translate/core';
 
 declare var ZAFClient: any;
 
@@ -33,7 +34,12 @@ export class AppComponent implements OnInit {
 
   constructor(
     private digiteamService: DigiteamService,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    translate: TranslateService) {
+    translate.addLangs(['en', 'pt']);
+    translate.setDefaultLang('en');
+    const browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/en|pt/) ? browserLang : 'en');
   }
 
   ngOnInit(): void {
@@ -108,7 +114,8 @@ export class AppComponent implements OnInit {
   }
 
   onCreatedSuccess($event: any) {
-    this.onLoginSuccess($event);
+    console.log($event);
+    this.getOrderDetails();
   }
 
   onCancelOrder($event: any) {

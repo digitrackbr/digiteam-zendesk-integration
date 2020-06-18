@@ -34,10 +34,10 @@
           {{orderDetail.orderType?.name}}
         </div>
         <div class="p-col-12">
-          Número do OS: {{orderDetail.code}}
+          {{ 'DETAILS.CODE' | translate }}: {{orderDetail.code}}
         </div>
         <div class="p-col-12" *ngIf="orderDetail.statusId === 11">
-          Data de conclusão: {{orderDetail.dueDate | date : 'medium'}}
+          {{ 'DETAILS.CONCLUSION_DATE' | translate }}: {{orderDetail.dueDate | date : 'medium'}}
         </div>
         <div class="p-col-12" *ngIf="orderDetail.statusId === 8">
           <agm-map [latitude]="orderDetail?.whereis?.latitude"
@@ -82,7 +82,7 @@
                   <td><span>{{orderDetail.agentModel?.name}}</span></td>
                 </tr>
                 <tr>
-                  <td>Atendimento: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
+                  <td>{{ 'DETAILS.ATTENDANCE' | translate }}: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
                 </tr>
               </table>
             </td>
@@ -90,7 +90,7 @@
         </table>
         <p-footer>
           <div class="p-col-12" style="text-align: end">
-            <p-button label="Cancelar OS"
+            <p-button label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
                       icon="pi pi-times"
                       iconPos="right"
                       class="ui-button-rounded ui-button-secondary"
@@ -104,13 +104,4 @@
 
   </div>
 </ng-container>
-<!--<div class="p-col-12" style="text-align: center" *ngIf="appStatus !== 'login'">
-  <p-button label="Sair"
-            icon="pi pi-power-off"
-            iconPos="right"
-            type="button"
-            class="ui-button-rounded ui-button-secondary"
-            (onClick)="logout($event)">
-  </p-button>
-</div>-->
 
