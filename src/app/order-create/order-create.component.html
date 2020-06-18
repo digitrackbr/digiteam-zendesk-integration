@@ -33,19 +33,19 @@
       <hr style=" border: 1px solid lightgray"/>
       </div>
       <!--PHONE-->
-      <div class="p-col-12 p-md-6">
+      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
         <!--{{ 'CREATE.PHONE' | translate }}-->
         Telefone
       </div>
       <div class="p-col-12">
         <input pInputText
                ngModel="{{phone}}"
-               [style]="{'width': '100%'}"
+               st
                formControlName="phone"
                placeholder="Telefone">
       </div>
       <!--ORDER TYPE-->
-      <div class="p-col-12 p-md-6">
+      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
         Tipo de demanda
       </div>
       <div class="p-col-12" *ngIf="!showOrderEdit()">
@@ -74,7 +74,7 @@
       </div>
       </div>
       <!--PRIORITY-->
-      <div class="p-col-12 p-md-6">
+      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
         Prioridade
       </div>
       <div class="p-col-12" *ngIf="!showPriorityEdit()">
@@ -103,7 +103,7 @@
         </div>
       </div>
       <!--UNIT-->
-      <div class="p-col-12 p-md-6">
+      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
         Unidade
       </div>
       <div class="p-col-12" *ngIf="!showUnitEdit()">
@@ -132,7 +132,7 @@
         </div>
       </div>
       <!--ADDRESS-->
-      <div class="p-col-12 p-md-6">
+      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
         Endereço
       </div>
       <div class="p-col-12 p-md-4">
