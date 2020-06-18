@@ -24,6 +24,8 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   state?: string;
   country?: string;
   ticketRequesterName?: string;
+  ticketRequesterAvatarUrl?: string;
+  ticketRequesterEmail?: string;
   zoom = 12;
   latitude = -15.77972;
   longitude = -47.92972;
@@ -95,6 +97,8 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
       this.ticketStatus = ticket.status;
       const requester = ticket.requester;
       this.ticketRequesterName = requester.name;
+      this.ticketRequesterAvatarUrl = requester.avatarUrl;
+      this.ticketRequesterEmail = requester.email;
       requester.identities.forEach((c: { type: string; value: number; }) => {
         if (c.type === 'phone_number') {
           this.phone = c.value;

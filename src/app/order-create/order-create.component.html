@@ -4,8 +4,33 @@
   <div>
     <div class="p-grid forms-grid">
       <div class="p-col-12 p-md-6">
-        <span style="font-stretch: condensed">{{ticketRequesterName}}</span>
-      <hr/>
+        <table>
+          <tr>
+            <td>
+              <div>
+                <img alt=""
+                     *ngIf="ticketRequesterAvatarUrl === null"
+                     style="border-radius: 50%; width: 50px"
+                     src="https://secure.gravatar.com/avatar/5dbbdc1eae890ebabee2f477685ba5c2?d=https%3A//assets.zendesk.com/images/2016/default-avatar-80.png&amp;s=80&amp;r=g">
+                <img alt=""
+                     *ngIf="ticketRequesterAvatarUrl !== null"
+                     style="border-radius: 50%; width: 50px"
+                     src="{{ticketRequesterAvatarUrl}}">
+              </div>
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td><span style=" font-weight: bold">{{ticketRequesterName}}</span></td>
+                </tr>
+                <tr>
+                  <td>{{ticketRequesterEmail}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      <hr style=" border: 1px solid lightgray"/>
       </div>
       <!--PHONE-->
       <div class="p-col-12 p-md-6">

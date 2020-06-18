@@ -37,9 +37,10 @@ export class AppComponent implements OnInit {
     private messageService: MessageService,
     translate: TranslateService) {
     translate.addLangs(['en', 'pt']);
-    translate.setDefaultLang('en');
+    translate.setDefaultLang('pt');
     const browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/en|pt/) ? browserLang : 'en');
+    // translate.use(browserLang.match(/en|pt/) ? browserLang : 'en');
+    translate.use('pt');
   }
 
   ngOnInit(): void {
