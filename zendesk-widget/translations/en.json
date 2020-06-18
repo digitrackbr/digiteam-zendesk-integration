@@ -4,24 +4,5 @@
     "short_description": " Intelligent scheduling, dispatch, asset management, and much more!",
     "long_description": " With Digiteam your organization will be able to manage various external activities,\n such as maintenance services, repairs, inspections, and even sales team's visits.\n We automatically schedule considering availability, skills, tools, and materials, allocating the appropriate resource for each activity.\n Your customers will be able to monitor the entire cycle of service and even rate your external service.\n We deliver efficiency, improvements in the revenue stream, and customer satisfaction.",
     "installation_instructions": " We can help you with the installation.\n Please get in touch with our team and we will help your organization to improve external operations.\n zendesk@digiteam.com.br | +55 61 9341-7015 (WhatsApp)"
-  },
-  "LOGIN": {
-    "USERNAME": "Usuario",
-    "PASSWORD": "Senha",
-    "BUTTON_LOGIN": "Entrar"
-  },
-  "CREATE": {
-    "PHONE": "Telefone",
-    "ORDER_TYPE": "Tipo de demanda",
-    "PRIORITY": "Prioridade",
-    "UNIT": "Unidade",
-    "ADDRESS": "Endereço",
-    "BUTTON_CREATE": "Criar"
-  },
-  "DETAILS": {
-    "CODE": "Número do OS",
-    "CONCLUSION_DATE": "Data de conclusão",
-    "ATTENDANCE": "Atendimento",
-    "BUTTON_CANCEL": "Cancelar OS"
   }
 }

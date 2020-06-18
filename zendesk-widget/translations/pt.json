@@ -4,24 +4,5 @@
     "short_description": "Planejamento inteligente, despacho, gestão de ativos e muito mais!",
     "long_description": " Com Digiteam sua organização conseguira gerenciar variadas atividades externas, \n como serviços de manutenção, reparos, fiscalizações e ate as visitas de sua equipe de relacionamento. \n De forma automática planejamos levando em conta a disponibilidade, habilidades, ferramentas e materiais, \n alocando o recurso adequado para cada atividade. Os seus clientes poderão acompanhar todo o fluxo de prestação \n do serviço e ate avaliar o atendimento externo. Entregamos eficiência da gestão, melhoras no fluxo de receita e satisfação do cliente.",
     "installation_instructions": "Podemos ajudá-lo na instalação. \n Por favor, entre em contato com nossa equipe que ajudaremos  sua organização a melhorar as operações externas. \n zendesk@digiteam.com.br | +55 61 9341-7015 (WhatsApp)"
-  },
-  "LOGIN": {
-    "USERNAME": "Usuario",
-    "PASSWORD": "Senha",
-    "BUTTON_LOGIN": "Entrar"
-  },
-  "CREATE": {
-    "PHONE": "Telefone",
-    "ORDER_TYPE": "Tipo de demanda",
-    "PRIORITY": "Prioridade",
-    "UNIT": "Unidade",
-    "ADDRESS": "Endereço",
-    "BUTTON_CREATE": "Criar"
-  },
-  "DETAILS": {
-    "CODE": "Número do OS",
-    "CONCLUSION_DATE": "Data de conclusão",
-    "ATTENDANCE": "Atendimento",
-    "BUTTON_CANCEL": "Cancelar OS"
   }
 }

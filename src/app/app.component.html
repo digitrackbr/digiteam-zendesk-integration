@@ -34,10 +34,10 @@
           {{orderDetail.orderType?.name}}
         </div>
         <div class="p-col-12">
-          {{ 'DETAILS.CODE' | translate }}: {{orderDetail.code}}
+          Número do OS
         </div>
         <div class="p-col-12" *ngIf="orderDetail.statusId === 11">
-          {{ 'DETAILS.CONCLUSION_DATE' | translate }}: {{orderDetail.dueDate | date : 'medium'}}
+          Data de conclusão: {{orderDetail.dueDate | date : 'medium'}}
         </div>
         <div class="p-col-12" *ngIf="orderDetail.statusId === 8">
           <agm-map [latitude]="orderDetail?.whereis?.latitude"
@@ -82,7 +82,7 @@
                   <td><span>{{orderDetail.agentModel?.name}}</span></td>
                 </tr>
                 <tr>
-                  <td>{{ 'DETAILS.ATTENDANCE' | translate }}: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
+                  <td>Atendimento: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
                 </tr>
               </table>
             </td>
@@ -90,7 +90,7 @@
         </table>
         <p-footer>
           <div class="p-col-12" style="text-align: end">
-            <p-button label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
+            <p-button label="Cancelar OS"
                       icon="pi pi-times"
                       iconPos="right"
                       class="ui-button-rounded ui-button-secondary"
