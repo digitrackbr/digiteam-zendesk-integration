@@ -50,6 +50,7 @@
         <p-dropdown [options]="orderTypeList"
                     placeholder="Tipo de OS"
                     formControlName="orderType"
+                    [style]="{'width': '100%'}"
                     required="true"
                     (onChange)="onChangeOrderType($event)"
                     [filter]="true">
