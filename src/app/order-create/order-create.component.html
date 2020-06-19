@@ -30,12 +30,11 @@
             </td>
           </tr>
         </table>
-      <hr style=" border: 1px solid lightgray"/>
+        <hr style=" border: 1px solid lightgray"/>
       </div>
       <!--PHONE-->
       <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
         {{ 'CREATE.PHONE' | translate }}
-        <!--Telefone-->
       </div>
       <div class="p-col-12">
         <input pInputText
@@ -45,7 +44,7 @@
       </div>
       <!--ORDER TYPE-->
       <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
-        Tipo de demanda
+        {{ 'CREATE.ORDER_TYPE' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showOrderEdit()">
         <p-dropdown [options]="orderTypeList"
@@ -59,21 +58,21 @@
       </div>
       <div class="p-col-12" *ngIf="showOrderEdit()">
         <div class="ui-inputgroup">
-        <input pInputText
-               formControlName="orderType"
-               ngModel="{{orderTypeName}}"
-               disabled="true">
+          <input pInputText
+                 formControlName="orderType"
+                 ngModel="{{orderTypeName}}"
+                 disabled="true">
           <button pButton
                   (click)="handleEditOrderType()"
                   type="button"
                   icon="pi pi-pencil"
                   class="ui-button-warn">
           </button>
-      </div>
+        </div>
       </div>
       <!--PRIORITY-->
       <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
-        Prioridade
+        {{ 'CREATE.PRIORITY' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showPriorityEdit()">
         <p-dropdown [options]="priorityList"
@@ -101,7 +100,7 @@
       </div>
       <!--UNIT-->
       <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
-        Unidade
+        {{ 'CREATE.UNIT' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showUnitEdit()">
         <p-dropdown [options]="unitsList"
@@ -129,7 +128,7 @@
       </div>
       <!--ADDRESS-->
       <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
-        Endereço
+        {{ 'CREATE.ADDRESS' | translate }}
       </div>
       <div class="p-col-12 p-md-4">
         <div class="ui-inputgroup">
@@ -164,7 +163,7 @@
       </div>
       <!--BUTTON-->
       <div class="p-col-12" style="text-align: end">
-        <p-button label="Criar"
+        <p-button label="{{ 'CREATE.BUTTON_CREATE' | translate }}"
                   type="submit"
                   [disabled]="!createForm?.valid">
         </p-button>

@@ -2,7 +2,6 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private tokenName = 'user_token';

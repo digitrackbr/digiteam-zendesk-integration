@@ -6,26 +6,25 @@
              type="text"
              pInputText
              formControlName="username"
-             placeholder="Usuario"/>
+             placeholder="{{ 'LOGIN.USERNAME' | translate }}"/>
     </div>
     <div class="p-col-12" style="text-align: center">
       <input id="password"
              type="password"
              formControlName="password"
-             placeholder="Senha"
+             placeholder="{{ 'LOGIN.PASSWORD' | translate }}"
              pPassword [feedback]="false"/>
     </div>
 
     <div class="p-col-12" style="text-align: center">
-      <p-button label="Entrar"
+      <p-button label="{{ 'LOGIN.BUTTON_LOGIN' | translate }}"
                 type="submit"
                 [disabled]="!loginForm?.valid"
                 class="ui-button-rounded">
       </p-button>
     </div>
     <div style="text-align: center; width: 100%; font-size: smaller">
-      v2020.06.15
+      v2020.06.19
     </div>
-
   </div>
 </form>
