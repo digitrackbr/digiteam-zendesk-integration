@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     translate.setDefaultLang('pt');
     const browserLang = translate.getBrowserLang();
     // translate.use(browserLang.match(/en|pt/) ? browserLang : 'en');
-    translate.use('pt');
+    translate.use('en');
   }
 
   ngOnInit(): void {

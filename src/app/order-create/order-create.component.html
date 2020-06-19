@@ -34,13 +34,12 @@
       </div>
       <!--PHONE-->
       <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
-        <!--{{ 'CREATE.PHONE' | translate }}-->
-        Telefone
+        {{ 'CREATE.PHONE' | translate }}
+        <!--Telefone-->
       </div>
       <div class="p-col-12">
         <input pInputText
                ngModel="{{phone}}"
-               st
                formControlName="phone"
                placeholder="Telefone">
       </div>
@@ -63,7 +62,6 @@
         <input pInputText
                formControlName="orderType"
                ngModel="{{orderTypeName}}"
-               [style]="{'width': '100%'}"
                disabled="true">
           <button pButton
                   (click)="handleEditOrderType()"
@@ -92,7 +90,6 @@
           <input pInputText
                  formControlName="priority"
                  ngModel="{{priorityName}}"
-                 [style]="{'width': '100%'}"
                  disabled="true">
           <button pButton
                   (click)="handleEditPriority()"
@@ -121,7 +118,6 @@
           <input pInputText
                  formControlName="unit"
                  ngModel="{{unitName}}"
-                 [style]="{'width': '100%'}"
                  disabled="true">
           <button pButton
                   (click)="handleEditUnit()"
@@ -140,7 +136,6 @@
           <input pInputText
                  formControlName="address"
                  ngModel="{{address}}"
-                 [style]="{'width': '100%'}"
                  placeholder="Endereço"
                  required="true">
           <button pButton

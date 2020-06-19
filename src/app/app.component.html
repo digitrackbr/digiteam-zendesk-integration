@@ -34,7 +34,7 @@
           {{orderDetail.orderType?.name}}
         </div>
         <div class="p-col-12">
-          Número do OS
+          Número do OS: {{orderDetail.code}}
         </div>
         <div class="p-col-12" *ngIf="orderDetail.statusId === 11">
           Data de conclusão: {{orderDetail.dueDate | date : 'medium'}}
