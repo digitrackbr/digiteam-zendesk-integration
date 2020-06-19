@@ -33,7 +33,7 @@
         <hr style=" border: 1px solid lightgray"/>
       </div>
       <!--PHONE-->
-      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
+      <div class="p-col-12 p-md-6 font-weight-600" style="padding-bottom: 1px">
         {{ 'CREATE.PHONE' | translate }}
       </div>
       <div class="p-col-12">
@@ -43,7 +43,7 @@
                placeholder="Telefone">
       </div>
       <!--ORDER TYPE-->
-      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
+      <div class="p-col-12 p-md-6 font-weight-600" style="padding-bottom: 1px">
         {{ 'CREATE.ORDER_TYPE' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showOrderEdit()">
@@ -51,7 +51,6 @@
                     placeholder="Tipo de OS"
                     formControlName="orderType"
                     required="true"
-                    [style]="{'width': '100%', 'font-size': '12px'}"
                     (onChange)="onChangeOrderType($event)"
                     [filter]="true">
         </p-dropdown>
@@ -62,16 +61,14 @@
                  formControlName="orderType"
                  ngModel="{{orderTypeName}}"
                  disabled="true">
-          <button pButton
-                  (click)="handleEditOrderType()"
-                  type="button"
-                  icon="pi pi-pencil"
-                  class="ui-button-warn">
-          </button>
+          <span class="ui-inputgroup-addon" (click)="handleEditOrderType()">
+            <i class="pi pi-pencil" style="line-height: 1.25;">
+            </i>
+          </span>
         </div>
       </div>
       <!--PRIORITY-->
-      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
+      <div class="p-col-12 p-md-6 font-weight-600" style="padding-bottom: 1px">
         {{ 'CREATE.PRIORITY' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showPriorityEdit()">
@@ -90,16 +87,14 @@
                  formControlName="priority"
                  ngModel="{{priorityName}}"
                  disabled="true">
-          <button pButton
-                  (click)="handleEditPriority()"
-                  type="button"
-                  icon="pi pi-pencil"
-                  class="ui-button-warn">
-          </button>
+          <span class="ui-inputgroup-addon" (click)="handleEditPriority()">
+            <i class="pi pi-pencil" style="line-height: 1.25;">
+            </i>
+          </span>
         </div>
       </div>
       <!--UNIT-->
-      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
+      <div class="p-col-12 p-md-6 font-weight-600" style="padding-bottom: 1px">
         {{ 'CREATE.UNIT' | translate }}
       </div>
       <div class="p-col-12" *ngIf="!showUnitEdit()">
@@ -118,16 +113,14 @@
                  formControlName="unit"
                  ngModel="{{unitName}}"
                  disabled="true">
-          <button pButton
-                  (click)="handleEditUnit()"
-                  type="button"
-                  icon="pi pi-pencil"
-                  class="ui-button-warn">
-          </button>
+          <span class="ui-inputgroup-addon" (click)="handleEditUnit()">
+            <i class="pi pi-pencil" style="line-height: 1.25;">
+            </i>
+          </span>
         </div>
       </div>
       <!--ADDRESS-->
-      <div class="p-col-12 p-md-6" style="padding-bottom: 1px">
+      <div class="p-col-12 p-md-6 font-weight-600" style="padding-bottom: 1px">
         {{ 'CREATE.ADDRESS' | translate }}
       </div>
       <div class="p-col-12 p-md-4">
@@ -137,12 +130,10 @@
                  ngModel="{{address}}"
                  placeholder="Endereço"
                  required="true">
-          <button pButton
-                  (click)="handleGeocode()"
-                  type="button"
-                  icon="pi pi-map-marker"
-                  class="ui-button-warn">
-          </button>
+          <span class="ui-inputgroup-addon" (click)="handleGeocode()">
+            <i class="pi pi-map-marker" style="line-height: 1.25;">
+            </i>
+          </span>
         </div>
       </div>
       <!--MAP-->

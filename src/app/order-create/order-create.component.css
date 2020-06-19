@@ -1,5 +1,6 @@
 :host {
   font-size: 12px !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
 }
 
 .ui-inputtext {
@@ -10,5 +11,9 @@
 
 .ui-dropdown .ui-dropdown-label{
   font-size: 12px !important;
+}
+
+.font-weight-600{
+  font-weight: 600;
 }
 
