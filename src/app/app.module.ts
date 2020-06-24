@@ -3,14 +3,15 @@ import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {
-    ButtonModule, CardModule,
-    DropdownModule,
-    InputTextModule,
-    MessageModule,
-    MessageService,
-    MessagesModule,
-    PasswordModule,
-    ToastModule
+  ButtonModule, CardModule,
+  DropdownModule,
+  InputTextModule,
+  MessageModule,
+  MessageService,
+  MessagesModule,
+  PasswordModule,
+  SplitButtonModule,
+  ToastModule
 } from 'primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
@@ -48,7 +49,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MessagesModule,
     ToastModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDOzcHIZsCXxtVLnJJOp7R0IxQU6PVff40',
+      apiKey: 'AIzaSyA497VsGGTer599ux6BHhADZF_jTwPdw4Q',
       libraries: ['places', 'drawing', 'geometry']
     }),
     AgmDirectionModule,
@@ -61,7 +62,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'pt'
-    })
+    }),
+    SplitButtonModule
   ],
   providers: [
     {

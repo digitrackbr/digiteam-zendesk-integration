@@ -1,8 +1,9 @@
 import {Component, enableProdMode, EventEmitter, OnInit, Output} from '@angular/core';
 import {DigiteamService} from './service/digiteam.service';
-import {MessageService} from 'primeng';
+import {MenuItem, MessageService} from 'primeng';
 import {OrderDetailModel} from './model/order-detail.model';
 import {TranslateService} from '@ngx-translate/core';
+import {OrderLogModel} from './model/order-log.model';
 
 declare var ZAFClient: any;
 
@@ -14,6 +15,7 @@ enableProdMode();
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
   appStatus = 'loading';
   orderDetail: OrderDetailModel = {};
   origin: any;
@@ -29,6 +31,9 @@ export class AppComponent implements OnInit {
     suppressMarkers: true,
     polylineOptions: {strokeColor: '#000000'}
   };
+  showHistory = false;
+  logs: OrderLogModel[] | undefined;
+  /*items: MenuItem[];*/
 
   @Output() createdSuccess = new EventEmitter<any>();
 
@@ -40,6 +45,17 @@ export class AppComponent implements OnInit {
     translate.setDefaultLang('pt');
     const browserLang = translate.getBrowserLang();
     translate.use(browserLang.match(/en|pt|es/) ? browserLang : 'pt');
+    /*this.items = [
+      {label: 'Update', icon: 'pi pi-refresh', command: () => {
+          this.onCancelOrder();
+        }},
+      {label: 'Delete', icon: 'pi pi-times', command: () => {
+          this.onCancelOrder();
+        }},
+      {label: 'Angular.io', icon: 'pi pi-info', url: 'http://angular.io'},
+      {separator: true},
+      {label: 'Setup', icon: 'pi pi-cog', routerLink: ['/setup']}
+    ];*/
   }
 
   ngOnInit(): void {
@@ -118,8 +134,7 @@ export class AppComponent implements OnInit {
     this.getOrderDetails();
   }
 
-  onCancelOrder($event: any) {
-    console.log($event);
+  onCancelOrder() {
     if (this.orderDetail.code != null) {
       this.digiteamService.cancelOrder(this.orderDetail.code).subscribe(() => {
         this.getOrderDetails();
@@ -157,7 +172,6 @@ export class AppComponent implements OnInit {
   showAgentData(): boolean {
     return this.orderDetail.statusId === 8
       || this.orderDetail.statusId === 2
-      || this.orderDetail.statusId === 11
       || this.orderDetail.statusId === 7
       || this.orderDetail.statusId === 14;
   }
@@ -169,5 +183,25 @@ export class AppComponent implements OnInit {
 
   private delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  handleShowHistory() {
+    this.showHistory = !this.showHistory;
+    this.getOrderLogs();
+  }
+
+  getOrderLogs() {
+    if (this.orderDetail.id != null) {
+      this.digiteamService.getOrderLogs(this.orderDetail.id)
+        .subscribe(
+          result => {
+            result.splice(0, 1);
+            this.logs = result;
+          },
+          () => {
+            this.appStatus = 'details';
+          }
+        );
+    }
   }
 }

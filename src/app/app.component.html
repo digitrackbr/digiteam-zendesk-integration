@@ -18,27 +18,45 @@
   <div class="p-grid">
     <div class="p-col-12">
       <p-card>
+        <!--<div class="p-col-12" style="text-align: end">
+            <p-button label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
+                      icon="pi pi-times"
+                      iconPos="right"
+                      class="ui-button-rounded ui-button-secondary"
+                      (onClick)="onCancelOrder()">
+            </p-button>
+          </div>-->
         <table>
           <tr>
             <td>
-              <div class="circle" [style.background-color]="'#' + statusColor"></div>
+              <div class="vl" [style.color]="'#' + statusColor"></div>
             </td>
             <td>
-            </td>
-            <td>
-              <span>{{orderDetail.status}}</span>
+              <table>
+                <tr>
+                  <td>
+                    <span class="font-weight-600">{{orderDetail.status}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-size-12">
+                    {{orderDetail.orderType?.name}}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-size-12">
+                    {{ 'DETAILS.CODE' | translate }}: {{orderDetail.code}}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-size-12">
+                    {{ 'DETAILS.CONCLUSION_DATE' | translate }}: {{orderDetail.dueDate | date : 'dd/MM/yyyy HH:mm'}}
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
-        <div class="p-col-12">
-          {{orderDetail.orderType?.name}}
-        </div>
-        <div class="p-col-12">
-          {{ 'DETAILS.CODE' | translate }}: {{orderDetail.code}}
-        </div>
-        <div class="p-col-12" *ngIf="orderDetail.statusId === 11">
-          {{ 'DETAILS.CONCLUSION_DATE' | translate }}: {{orderDetail.dueDate | date : 'medium'}}
-        </div>
         <div class="p-col-12" *ngIf="orderDetail.statusId === 8">
           <agm-map [latitude]="orderDetail?.whereis?.latitude"
                    [longitude]="orderDetail?.whereis?.longitude"
@@ -82,26 +100,40 @@
                   <td><span>{{orderDetail.agentModel?.name}}</span></td>
                 </tr>
                 <tr>
-                  <td>{{ 'DETAILS.ATTENDANCE' | translate }}: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
+                  <td>{{ 'DETAILS.ATTENDANCE' | translate }}
+                    : {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
                 </tr>
               </table>
             </td>
           </tr>
         </table>
         <p-footer>
-          <div class="p-col-12" style="text-align: end">
-            <p-button label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
-                      icon="pi pi-times"
-                      iconPos="right"
-                      class="ui-button-rounded ui-button-secondary"
-                      (onClick)="onCancelOrder($event)"
-                      *ngIf="orderDetail.statusId === 1">
-            </p-button>
+          <div style="text-align: end" *ngIf="!showHistory">
+            <i class="pi pi-angle-down" (click)="handleShowHistory()"></i>
+          </div>
+          <div class="history-tl-container" *ngIf="showHistory">
+            <ul class="tl">
+              <li *ngFor="let item of logs" class="tl-item">
+                <div class="timestamp">
+                  {{item.createdOn | date:'dd/MM/yyyy'}}
+                  <br>
+                  {{item.createdOn | date:'HH:mm'}}
+                </div>
+                <div class="item-title">
+                  {{item.orderStatus.name}}
+                </div>
+                <div class="item-detail">
+                  {{item.author.name}}
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="text-align: end" *ngIf="showHistory">
+            <i class="pi pi-angle-up" (click)="handleShowHistory()"></i>
           </div>
         </p-footer>
       </p-card>
     </div>
-
   </div>
 </ng-container>
 

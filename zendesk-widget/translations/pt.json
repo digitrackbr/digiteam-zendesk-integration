@@ -1,8 +1,14 @@
 {
   "app": {
-    "name": "Digiteam – Gestão de Equipes Externas",
+    "name": "Digiteam",
     "short_description": "Planejamento inteligente, despacho, gestão de ativos e muito mais!",
-    "long_description": " Com Digiteam sua organização conseguira gerenciar variadas atividades externas, \n como serviços de manutenção, reparos, fiscalizações e ate as visitas de sua equipe de relacionamento. \n De forma automática planejamos levando em conta a disponibilidade, habilidades, ferramentas e materiais, \n alocando o recurso adequado para cada atividade. Os seus clientes poderão acompanhar todo o fluxo de prestação \n do serviço e ate avaliar o atendimento externo. Entregamos eficiência da gestão, melhoras no fluxo de receita e satisfação do cliente.",
-    "installation_instructions": "Podemos ajudá-lo na instalação. \n Por favor, entre em contato com nossa equipe que ajudaremos  sua organização a melhorar as operações externas. \n zendesk@digiteam.com.br | +55 61 9341-7015 (WhatsApp)"
+    "long_description": "Obtenha acesso a uma plataforma completa do Mobile Workforce Management sem sair do Zendesk.\nFaça parte de uma verdadeira transformação digital, melhore a produtividade das equipes externas e aumente a satisfação do seu cliente.\n\n• Gerenciamento de serviços: gerencie qualquer tipo de atividade externa, como serviços de manutenção, reparos, inspeções, visitas da equipe de vendas e outras.\n\n• Otimização: programe, automática ou manualmente, o recurso apropriado para cada atividade, considerando disponibilidade, habilidades, ferramentas e materiais.\n\n• Clientes satisfeitos: seus clientes poderão monitorar todo o ciclo de serviço e até avaliar seu serviço externo. Integrado ao Zendesk, os tickets podem ser enviados automaticamente como ordens de serviço e despachados para o campo.\n\n• Decisões operacionais e comerciais corretas: acompanhe em tempo real o desempenho de sua equipe, entre outros indicadores de negócios em nosso painel analítico.\n\nCom o Android App da Digiteam, as equipes têm uma ferramenta de orientação, acesso a documentos técnicos, tempo recorde e materiais aplicados em cada serviço, além de coletar evidências digitais como fotos e assinaturas de clientes.\n\nEntre em contato conosco para obter as licenças apropriadas e como podemos ajudar sua organização a melhorar o gerenciamento de suas atividades externas e recursos humanos.",
+    "installation_instructions": "Podemos ajudá-lo na instalação. \n Por favor, entre em contato com nossa equipe que ajudaremos  sua organização a melhorar as operações externas. \n zendesk@digiteam.com.br | +55 61 9341-7015 (WhatsApp)",
+    "parameters": {
+      "digiteam_url": {
+        "label": "Digiteam URL",
+        "helpText": "Coloque aqui a url por exemplo: https://org.digiteam.com.br"
+      }
+    }
   }
 }

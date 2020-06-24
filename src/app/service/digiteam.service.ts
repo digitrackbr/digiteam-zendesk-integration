@@ -9,6 +9,7 @@ import {KeyValueModel} from '../model/key-value.model';
 import {AuthenticationToken} from '../model/authentication-token';
 import {Credential} from '../model/credential';
 import { RefreshToken } from '../model/refresh-token';
+import {OrderLogModel} from '../model/order-log.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,6 @@ export class DigiteamService {
 
   private tokenName = 'user_token';
   private tokenRefresh = 'token_refresh';
-  urlBaseV0 = 'http://remohml.localhost:8080';
 
   private tenantUrlHash = 'tenant_url';
 
@@ -100,5 +100,10 @@ export class DigiteamService {
   public logout() {
     localStorage.removeItem(this.token);
     localStorage.removeItem(this.refreshToken);
+  }
+
+  public getOrderLogs(orderId: number): Observable<OrderLogModel[]> {
+    const url = this.tenantUrl + `/api-v1/angular/orderLogs/${orderId}`;
+    return this.http.get<OrderLogModel[]>(url);
   }
 }

@@ -6,6 +6,7 @@
     "url": "https://www.digitrack.com.br"
   },
   "defaultLocale": "en",
+  "private": false,
   "location": {
     "support": {
       "ticket_sidebar": "http://localhost:4200/index.html"
