@@ -16,7 +16,8 @@
     "CODE": "Code OS",
     "CONCLUSION_DATE": "Conclusion date",
     "ATTENDANCE": "Attendance",
-    "BUTTON_CANCEL": "Cancel OS"
+    "BUTTON_CANCEL": "Cancel OS",
+    "DUE_DATE": "Due date"
   }
 }
 

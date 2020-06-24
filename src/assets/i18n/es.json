@@ -16,6 +16,7 @@
     "CODE": "Código OS",
     "CONCLUSION_DATE": "Fecha de conclusión",
     "ATTENDANCE": "Asistencia",
-    "BUTTON_CANCEL": "Cancelar OS"
+    "BUTTON_CANCEL": "Cancelar OS",
+    "DUE_DATE": "Fecha límite"
   }
 }

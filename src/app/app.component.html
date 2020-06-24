@@ -49,8 +49,11 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="font-size-12">
+                  <td class="font-size-12" *ngIf="orderDetail.statusId === 11">
                     {{ 'DETAILS.CONCLUSION_DATE' | translate }}: {{orderDetail.dueDate | date : 'dd/MM/yyyy HH:mm'}}
+                  </td>
+                  <td class="font-size-12" *ngIf="orderDetail.statusId !== 11">
+                    {{ 'DETAILS.DUE_DATE' | translate }}: {{orderDetail.dueDate | date : 'dd/MM/yyyy HH:mm'}}
                   </td>
                 </tr>
               </table>
