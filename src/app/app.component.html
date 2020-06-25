@@ -1,8 +1,10 @@
-<app-login *ngIf="appStatus === 'login'" (loginSuccess)="onLoginSuccess($event)">
+<app-login *ngIf="appStatus === 'login'"
+           (loginSuccess)="onLoginSuccess($event)">
 
 </app-login>
 
-<app-order-create *ngIf="appStatus === 'create'" (createdSuccess)="onCreatedSuccess($event)">
+<app-order-create *ngIf="appStatus === 'create'"
+                  (createdSuccess)="onCreatedSuccess($event)">
 
 </app-order-create>
 
@@ -47,6 +49,11 @@
                   <td class="font-size-12" *ngIf="orderDetail.statusId !== 11">
                     {{ 'DETAILS.DUE_DATE' | translate }}: {{orderDetail.dueDate | date : 'dd/MM/yyyy HH:mm'}}
                   </td>
+                  <td style="text-align: end; padding-left: 20px" *ngIf="!showHistory">
+                    <div>
+                      <i class="pi pi-angle-down" (click)="handleShowHistory()"></i>
+                    </div>
+                  </td>
                 </tr>
               </table>
             </td>
@@ -66,9 +73,8 @@
                            [renderOptions]="renderOptions"
                            *ngIf="orderDetail.planningModel !== null">
             </agm-direction>
-            <agm-overlay
-              [latitude]="origin.lat"
-              [longitude]="origin.lng">
+            <agm-overlay [latitude]="origin.lat"
+                         [longitude]="origin.lng">
               <div class="arrival_time" style="background-color: beige">
                 <b>{{durationToPoint?.value | date:'HH:mm'}}</b>
               </div>
@@ -92,50 +98,50 @@
             <td>
               <table>
                 <tr>
-                  <td><span>{{orderDetail.agentModel?.name}}</span></td>
+                  <td>
+                    <span>
+                      {{orderDetail.agentModel?.name}}
+                    </span>
+                  </td>
                 </tr>
                 <tr>
-                  <td>{{ 'DETAILS.ATTENDANCE' | translate }}
-                    : {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}</td>
+                  <td>
+                    {{ 'DETAILS.ATTENDANCE' | translate }}: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}
+                  </td>
                 </tr>
               </table>
             </td>
           </tr>
         </table>
-        <p-footer>
-          <div style="text-align: end" *ngIf="!showHistory">
-            <i class="pi pi-angle-down" (click)="handleShowHistory()"></i>
-          </div>
-          <div class="history-tl-container" *ngIf="showHistory">
-            <ul class="tl">
-              <li *ngFor="let item of logs" class="tl-item">
-                <div class="timestamp">
-                  {{item.createdOn | date:'dd/MM/yyyy'}}
-                  <br>
-                  {{item.createdOn | date:'HH:mm'}}
-                </div>
-                <div class="item-title">
-                  {{item.orderStatus.name}}
-                </div>
-                <div class="item-detail">
-                  {{item.author.name}}
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div style="text-align: end" *ngIf="showHistory">
-            <i class="pi pi-angle-up" (click)="handleShowHistory()"></i>
-          </div>
-          <div class="p-col-12" style="text-align: end">
-            <p-button label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
-                      icon="pi pi-times"
-                      iconPos="right"
-                      class="ui-button-rounded ui-button-secondary"
-                      (onClick)="onCancelOrder()"
-                      *ngIf="orderDetail.statusId === 1">
-            </p-button>
-          </div>
-        </p-footer>
+        <div class="history-tl-container" *ngIf="showHistory">
+          <ul class="tl">
+            <li *ngFor="let item of logs" class="tl-item">
+              <div class="timestamp">
+                {{item.createdOn | date:'dd/MM/yyyy'}}
+                <br>
+                {{item.createdOn | date:'HH:mm'}}
+              </div>
+              <div class="item-title">
+                {{item.orderStatus.name}}
+              </div>
+              <div class="item-detail">
+                {{item.author.name}}
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div style="text-align: end" *ngIf="showHistory">
+          <i class="pi pi-angle-up" (click)="handleShowHistory()"></i>
+        </div>
+        <div class="p-col-12" style="text-align: end; padding: 0">
+          <p-button label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
+                    icon="pi pi-times"
+                    iconPos="right"
+                    class="ui-button-rounded ui-button-secondary"
+                    (onClick)="onCancelOrder()"
+                    *ngIf="orderDetail.statusId === 1">
+          </p-button>
+        </div>
       </p-card>
     </div>
   </div>

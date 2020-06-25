@@ -39,6 +39,7 @@ body{
   margin:auto;
   display:block;
   position:relative;
+  padding-top: 20px;
 }
 .history-tl-container ul.tl{
   margin:1px 0;
