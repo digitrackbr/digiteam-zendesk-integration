@@ -9,7 +9,7 @@
             <td>
               <div>
                 <img alt=""
-                     *ngIf="ticketRequesterAvatarUrl === null"
+                     *ngIf="!ticketRequesterAvatarUrl"
                      style="border-radius: 50%; width: 50px"
                      src="https://secure.gravatar.com/avatar/5dbbdc1eae890ebabee2f477685ba5c2?d=https%3A//assets.zendesk.com/images/2016/default-avatar-80.png&amp;s=80&amp;r=g">
                 <img alt=""
@@ -155,10 +155,12 @@
       </div>
       <!--BUTTON-->
       <div class="p-col-12" style="text-align: end">
-        <p-button label="{{ 'CREATE.BUTTON_CREATE' | translate }}"
-                  type="submit"
-                  [disabled]="!createForm?.valid">
-        </p-button>
+        <button pButton
+                type="submit"
+                label="{{ 'CREATE.BUTTON_CREATE' | translate }}"
+                class="ui-button-secondary"
+                [disabled]="!createForm?.valid">
+        </button>
       </div>
     </div>
   </div>

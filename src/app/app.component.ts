@@ -1,6 +1,6 @@
 import {Component, enableProdMode, EventEmitter, OnInit, Output} from '@angular/core';
 import {DigiteamService} from './service/digiteam.service';
-import {MenuItem, MessageService} from 'primeng';
+import {MessageService} from 'primeng';
 import {OrderDetailModel} from './model/order-detail.model';
 import {TranslateService} from '@ngx-translate/core';
 import {OrderLogModel} from './model/order-log.model';
@@ -16,6 +16,8 @@ enableProdMode();
 })
 export class AppComponent implements OnInit {
 
+  @Output() createdSuccess = new EventEmitter<any>();
+  client = ZAFClient.init();
   appStatus = 'loading';
   orderDetail: OrderDetailModel = {};
   origin: any;
@@ -33,9 +35,6 @@ export class AppComponent implements OnInit {
   };
   showHistory = false;
   logs: OrderLogModel[] | undefined;
-  /*items: MenuItem[];*/
-
-  @Output() createdSuccess = new EventEmitter<any>();
 
   constructor(
     private digiteamService: DigiteamService,
@@ -45,22 +44,10 @@ export class AppComponent implements OnInit {
     translate.setDefaultLang('pt');
     const browserLang = translate.getBrowserLang();
     translate.use(browserLang.match(/en|pt|es/) ? browserLang : 'pt');
-    /*this.items = [
-      {label: 'Update', icon: 'pi pi-refresh', command: () => {
-          this.onCancelOrder();
-        }},
-      {label: 'Delete', icon: 'pi pi-times', command: () => {
-          this.onCancelOrder();
-        }},
-      {label: 'Angular.io', icon: 'pi pi-info', url: 'http://angular.io'},
-      {separator: true},
-      {label: 'Setup', icon: 'pi pi-cog', routerLink: ['/setup']}
-    ];*/
   }
 
   ngOnInit(): void {
-    const client = ZAFClient.init();
-    client.metadata().then((metadata: { settings: { digiteam_url: string; }; }) => {
+    this.client.metadata().then((metadata: { settings: { digiteam_url: string; }; }) => {
       this.digiteamService.registerTenantUrl(metadata.settings.digiteam_url);
     });
     this.digiteamService.refresh()
@@ -74,7 +61,7 @@ export class AppComponent implements OnInit {
           this.appStatus = 'login';
         }
       );
-    client.invoke('resize', {width: '100%', height: '450px'});
+    this.client.invoke('resize', {width: '100%', height: '450px'});
   }
 
   init() {
@@ -83,7 +70,17 @@ export class AppComponent implements OnInit {
         .subscribe(
           result => {
             this.digiteamService.saveRefreshInfo(result);
-            this.getOrderDetails();
+            this.client.context().then((context) => {
+              const location = context.location;
+              switch (location) {
+                case 'user_sidebar':
+                  this.appStatus = 'order-user';
+                  break;
+                case 'ticket_sidebar':
+                  this.getOrderDetails();
+                  break;
+              }
+            });
           },
           () => {
             this.digiteamService.logout();
@@ -127,6 +124,11 @@ export class AppComponent implements OnInit {
   onLoginSuccess($event: any) {
     console.log($event);
     this.getOrderDetails();
+  }
+
+  onCreate($event: any) {
+    console.log($event);
+    this.appStatus = 'create';
   }
 
   onCreatedSuccess($event: any) {

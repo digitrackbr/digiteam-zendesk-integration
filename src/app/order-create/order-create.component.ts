@@ -13,6 +13,8 @@ declare var google: any;
   styleUrls: ['./order-create.component.css']
 })
 export class OrderCreateComponent implements AfterViewInit, OnInit {
+  @Output() createdSuccess = new EventEmitter<any>();
+  client = ZAFClient.init();
   createForm: FormGroup | undefined;
   ticketStatus?: string;
   ticketId?: string;
@@ -54,7 +56,6 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
     id: 0,
     name: undefined
   };
-  @Output() createdSuccess = new EventEmitter<any>();
 
   constructor(
     private messageService: MessageService,
@@ -65,6 +66,8 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
+    this.buildForm();
+
     this.digiteamService.getOrderTypes().subscribe(
       (result) => {
         this.orderTypeList = result.map(r => {
@@ -84,47 +87,68 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
       () => {
       }
     );
-
-    this.buildForm();
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
-    const client = ZAFClient.init();
-    client.get(['ticket']).then((data: { ticket: any; }) => {
-      const ticket = data.ticket;
-      this.ticketId = ticket.id;
-      this.ticketStatus = ticket.status;
-      const requester = ticket.requester;
-      this.ticketRequesterName = requester.name;
-      this.ticketRequesterAvatarUrl = requester.avatarUrl;
-      this.ticketRequesterEmail = requester.email;
-      requester.identities.forEach((c: { type: string; value: number; }) => {
-        if (c.type === 'phone_number') {
-          this.phone = c.value;
-          return;
-        }
-      });
-      client.request('/api/v2/tickets/'
-        + ticket.id
-        + '.json?include=brands,permissions,users,groups,organizations,ticket_fields')
-        .then((d: { ticket: { custom_fields: { forEach: (arg0: (cf: { id: number; value: string | number; }) => void) => void; }; }; }) => {
-          d.ticket.custom_fields.forEach((cf: { id: number; value: string | number; }) => {
-            if (cf.id === 360031892932) {
-              this.setOrderType(cf.value as number);
-            } else if (cf.id === 360031957771) {
-              this.setUnit(cf.value as number);
-            } else if (cf.id === 360032107572) {
-              this.setPriority(cf.value as number);
-            } else if (cf.id === 360031892872) {
-              this.address = cf.value as string;
-              if (this.createForm) {
-                this.createForm.value.address = cf.value;
+    this.client.context().then((context) => {
+      const location = context.location;
+      switch (location) {
+        case 'user_sidebar':
+          this.client.request(`/api/v2/users/${context.userId}.json`).then((data) => {
+            if (data && data.user) {
+              this.ticketRequesterName = data.user.name;
+              this.ticketRequesterEmail = data.user.email;
+              if (data.user.photo) {
+                this.ticketRequesterAvatarUrl = data.user.photo.content_url;
               }
-              this.handleGeocode();
+              this.phone = data.user.phone;
             }
           });
-        });
+          break;
+        case 'ticket_sidebar':
+          this.client.get(['ticket']).then((data: { ticket: any; }) => {
+            const ticket = data.ticket;
+            this.ticketId = ticket.id;
+            this.ticketStatus = ticket.status;
+            const requester = ticket.requester;
+            this.ticketRequesterName = requester.name;
+            this.ticketRequesterAvatarUrl = requester.avatarUrl;
+            this.ticketRequesterEmail = requester.email;
+            requester.identities.forEach((c: { type: string; value: number; }) => {
+              if (c.type === 'phone_number') {
+                this.phone = c.value;
+                return;
+              }
+            });
+            this.client.request('/api/v2/tickets/'
+              + ticket.id
+              + '.json?include=brands,permissions,users,groups,organizations,ticket_fields')
+              .then((d: {
+                ticket: {
+                  custom_fields: {
+                    forEach: (arg0: (cf: { id: number; value: string | number; }) => void) => void;
+                  };
+                };
+              }) => {
+                d.ticket.custom_fields.forEach((cf: { id: number; value: string | number; }) => {
+                  if (cf.id === 360031892932) {
+                    this.setOrderType(cf.value as number);
+                  } else if (cf.id === 360031957771) {
+                    this.setUnit(cf.value as number);
+                  } else if (cf.id === 360032107572) {
+                    this.setPriority(cf.value as number);
+                  } else if (cf.id === 360031892872) {
+                    this.address = cf.value as string;
+                    if (this.createForm) {
+                      this.createForm.value.address = cf.value;
+                    }
+                    this.handleGeocode();
+                  }
+                });
+              });
+          });
+          break;
+      }
     });
   }
 

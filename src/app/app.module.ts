@@ -24,6 +24,7 @@ import {AgmDirectionModule} from 'agm-direction';
 import {AgmOverlays} from 'agm-overlays';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { OrderUserComponent } from './order-user/order-user.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -33,7 +34,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     LoginComponent,
-    OrderCreateComponent
+    OrderCreateComponent,
+    OrderUserComponent
   ],
   imports: [
     BrowserModule,

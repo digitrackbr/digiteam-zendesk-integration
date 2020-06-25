@@ -18,5 +18,8 @@
     "ATTENDANCE": "Asistencia",
     "BUTTON_CANCEL": "Cancelar OS",
     "DUE_DATE": "Fecha límite"
+  },
+  "ORDER_USER": {
+    "BUTTON_NEW": "Nueva OS"
   }
 }

@@ -18,6 +18,9 @@
     "ATTENDANCE": "Attendance",
     "BUTTON_CANCEL": "Cancel OS",
     "DUE_DATE": "Due date"
+  },
+  "ORDER_USER": {
+    "BUTTON_NEW": "New OS"
   }
 }
 

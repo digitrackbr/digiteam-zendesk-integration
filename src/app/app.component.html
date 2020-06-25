@@ -8,6 +8,11 @@
 
 </app-order-create>
 
+<app-order-user *ngIf="appStatus === 'order-user'"
+                (createSuccess)="onCreate($event)">
+
+</app-order-user>
+
 <ng-container *ngIf="appStatus === 'loading'">
   <div class="p-grid">
     <div class="p-col-12 image-center">
