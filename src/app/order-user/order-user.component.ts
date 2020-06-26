@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DigiteamService} from '../service/digiteam.service';
 import {OrderDetailModel} from '../model/order-detail.model';
-import {TranslateService} from "@ngx-translate/core";
 
 declare var ZAFClient: any;
 
@@ -15,18 +14,7 @@ export class OrderUserComponent implements OnInit {
   client = ZAFClient.init();
   ordersDetail: OrderDetailModel[] = [];
 
-  constructor(
-    private digiteamService: DigiteamService,
-    translate: TranslateService) {
-    translate.addLangs(['en', 'pt', 'es']);
-    translate.setDefaultLang('pt');
-    this.client.request(`/api/v2/locales/current.json`).then((metadata: {
-      locale: any;
-      metadata: any;
-    }) => {
-      const locale = metadata.locale.locale.substring(0, 2);
-      translate.use(locale.match(/en|pt|es/) ? locale : 'pt');
-    });
+  constructor(private digiteamService: DigiteamService) {
   }
 
   ngOnInit() {
