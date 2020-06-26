@@ -19,7 +19,7 @@
       "dom"
     ],
     "strict": false,
-    "alwaysStrict": true
+    "alwaysStrict": false
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

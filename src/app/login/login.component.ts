@@ -4,8 +4,6 @@ import {DigiteamService} from '../service/digiteam.service';
 import {MessageService} from 'primeng';
 import {Credential} from '../model/credential';
 
-declare var defaultInit: any;
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -45,7 +43,7 @@ export class LoginComponent implements OnInit {
             this.digiteamService.saveAuthInfo(result);
             this.loginSuccess.emit(null);
           },
-          error => {
+          () => {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',

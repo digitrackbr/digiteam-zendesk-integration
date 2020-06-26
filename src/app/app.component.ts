@@ -42,8 +42,13 @@ export class AppComponent implements OnInit {
     translate: TranslateService) {
     translate.addLangs(['en', 'pt', 'es']);
     translate.setDefaultLang('pt');
-    const browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/en|pt|es/) ? browserLang : 'pt');
+    this.client.request(`/api/v2/locales/current.json`).then((metadata: {
+      locale: any;
+      metadata: any;
+    }) => {
+      const locale = metadata.locale.locale.substring(0, 2);
+      translate.use(locale.match(/en|pt|es/) ? locale : 'pt');
+    });
   }
 
   ngOnInit(): void {
@@ -70,7 +75,7 @@ export class AppComponent implements OnInit {
         .subscribe(
           result => {
             this.digiteamService.saveRefreshInfo(result);
-            this.client.context().then((context) => {
+            this.client.context().then((context: { location: any; }) => {
               const location = context.location;
               switch (location) {
                 case 'user_sidebar':
@@ -124,11 +129,6 @@ export class AppComponent implements OnInit {
   onLoginSuccess($event: any) {
     console.log($event);
     this.getOrderDetails();
-  }
-
-  onCreate($event: any) {
-    console.log($event);
-    this.appStatus = 'create';
   }
 
   onCreatedSuccess($event: any) {

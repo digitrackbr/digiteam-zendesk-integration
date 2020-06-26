@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {OrderDetailModel} from '../model/order-detail.model';
 import {CancelOrderResponse} from '../model/cancel-order-response';
@@ -105,5 +105,14 @@ export class DigiteamService {
   public getOrderLogs(orderId: number): Observable<OrderLogModel[]> {
     const url = this.tenantUrl + `/api-v1/angular/orderLogs/${orderId}`;
     return this.http.get<OrderLogModel[]>(url);
+  }
+
+  public getOrdersByCodes(codes: string[]): Observable<OrderDetailModel[]> {
+    const url = this.tenantUrl + `/api-v1/angular/orders/codes`;
+    let params = new HttpParams();
+    if (codes) {
+      params = params.set('codes', String(codes));
+    }
+    return this.http.get<OrderDetailModel[]>(url, {params});
   }
 }

@@ -1,12 +1,54 @@
-<div class="p-grid">
-  <div class="p-col-12">
-    <div class="p-col-12" style="text-align: end; padding: 0">
-      <button pButton
-              type="button"
-              label="+ {{ 'ORDER_USER.BUTTON_NEW' | translate }}"
-              class="ui-button-secondary"
-              (click)="onCreate()">
-      </button>
-    </div>
+<div class="p-grid" *ngIf="ordersDetail?.length > 0">
+  <div class="p-col-12 card-padding-bottom"
+       *ngFor="let order of ordersDetail">
+    <p-card>
+      <table>
+        <tr>
+          <td>
+            <div class="vl" [style.color]="'#' + order.statusColor"></div>
+          </td>
+          <td>
+            <table>
+              <tr>
+                <td>
+                  <span class="font-weight-600">{{order.statusName}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-12">
+                  {{order.orderType?.name}}
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-12">
+                  {{ 'DETAILS.CODE' | translate }}: {{order.code}}
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-12" *ngIf="order.statusId === 11">
+                  {{ 'DETAILS.CONCLUSION_DATE' | translate }}: {{order.dueDate | date : 'dd/MM/yyyy HH:mm'}}
+                </td>
+                <td class="font-size-12" *ngIf="order.statusId !== 11">
+                  {{ 'DETAILS.DUE_DATE' | translate }}: {{order.dueDate | date : 'dd/MM/yyyy HH:mm'}}
+                </td>
+                <!--<td style="text-align: end; padding-left: 20px" *ngIf="!showHistory">
+                  <div>
+                    <i class="pi pi-angle-down" (click)="handleShowHistory()"></i>
+                  </div>
+                </td>-->
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </p-card>
+  </div>
+</div>
+
+<div class="p-grid" *ngIf="ordersDetail?.length === 0">
+  <div class="p-col-12 card-padding-bottom">
+    <p-card>
+      <span class="font-size-12">{{ 'ORDER_USER.NO_RECORDS_FOUND' | translate }}</span>
+    </p-card>
   </div>
 </div>

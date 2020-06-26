@@ -20,6 +20,7 @@
     "DUE_DATE": "Data limite"
   },
   "ORDER_USER": {
-    "BUTTON_NEW": "Nova OS"
+    "BUTTON_NEW": "Nova OS",
+    "NO_RECORDS_FOUND": "Não existem dados"
   }
 }

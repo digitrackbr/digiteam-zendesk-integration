@@ -20,7 +20,8 @@
     "DUE_DATE": "Due date"
   },
   "ORDER_USER": {
-    "BUTTON_NEW": "New OS"
+    "BUTTON_NEW": "New OS",
+    "NO_RECORDS_FOUND": "No records found"
   }
 }
 

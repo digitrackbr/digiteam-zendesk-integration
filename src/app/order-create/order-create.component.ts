@@ -90,20 +90,21 @@ export class OrderCreateComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.client.context().then((context) => {
+    this.client.context().then((context: { location: any; userId: any; }) => {
       const location = context.location;
       switch (location) {
         case 'user_sidebar':
-          this.client.request(`/api/v2/users/${context.userId}.json`).then((data) => {
-            if (data && data.user) {
-              this.ticketRequesterName = data.user.name;
-              this.ticketRequesterEmail = data.user.email;
-              if (data.user.photo) {
-                this.ticketRequesterAvatarUrl = data.user.photo.content_url;
+          this.client.request(`/api/v2/users/${context.userId}.json`)
+            .then((data: { user: { name: string; email: string; photo: { content_url: string; }; phone: number; }; }) => {
+              if (data && data.user) {
+                this.ticketRequesterName = data.user.name;
+                this.ticketRequesterEmail = data.user.email;
+                if (data.user.photo) {
+                  this.ticketRequesterAvatarUrl = data.user.photo.content_url;
+                }
+                this.phone = data.user.phone;
               }
-              this.phone = data.user.phone;
-            }
-          });
+            });
           break;
         case 'ticket_sidebar':
           this.client.get(['ticket']).then((data: { ticket: any; }) => {

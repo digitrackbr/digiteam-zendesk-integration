@@ -1,13 +1,12 @@
-
 {
-  "name": "Digiteam Mobile Workforce Management",
+  "name": "Digiteam",
   "author": {
     "name": "Digitrack",
     "email": "suporte@digiteam.com.br",
     "url": "https://www.digitrack.com.br"
   },
   "defaultLocale": "en",
-  "private": false,
+  "private": true,
   "location": {
     "support": {
       "ticket_sidebar": "https://zendeskapp.digiteam.com.br/index.html",
