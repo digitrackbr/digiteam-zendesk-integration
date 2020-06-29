@@ -23,6 +23,14 @@
 <ng-container *ngIf="appStatus === 'detail'">
   <div class="p-grid">
     <div class="p-col-12">
+      <p-overlayPanel #op>
+        <button pButton
+                type="button"
+                label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
+                (click)="onCancelOrder()"
+                class="ui-button-secondary">
+        </button>
+      </p-overlayPanel>
       <p-card>
         <table>
           <tr>
@@ -34,6 +42,13 @@
                 <tr>
                   <td>
                     <span class="font-weight-600">{{orderDetail.status}}</span>
+                  </td>
+                  <td style="text-align: end; padding-left: 20px">
+                    <div>
+                      <i class="pi pi-ellipsis-v"
+                         (click)="op.toggle($event)"
+                         *ngIf="orderDetail.statusId === 1"></i>
+                    </div>
                   </td>
                 </tr>
                 <tr>
@@ -110,7 +125,8 @@
                 </tr>
                 <tr>
                   <td>
-                    {{ 'DETAILS.ATTENDANCE' | translate }}: {{orderDetail.planningModel?.estimatedEndDate | date: "medium"}}
+                    {{ 'DETAILS.ATTENDANCE' | translate }}
+                    : {{orderDetail.planningModel?.estimatedEndDate | date: "dd/MM/yyyy HH:mm"}}
                   </td>
                 </tr>
               </table>
@@ -136,15 +152,6 @@
         </div>
         <div style="text-align: end" *ngIf="showHistory">
           <i class="pi pi-angle-up" (click)="handleShowHistory()"></i>
-        </div>
-        <div class="p-col-12" style="text-align: end; padding: 0">
-          <p-button label="{{ 'DETAILS.BUTTON_CANCEL' | translate }}"
-                    icon="pi pi-times"
-                    iconPos="right"
-                    class="ui-button-rounded ui-button-secondary"
-                    (onClick)="onCancelOrder()"
-                    *ngIf="orderDetail.statusId === 1">
-          </p-button>
         </div>
       </p-card>
     </div>

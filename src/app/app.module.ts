@@ -1,15 +1,18 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
 import {AppComponent} from './app.component';
 import {
-  ButtonModule, CardModule,
+  ButtonModule,
+  CardModule, ContextMenuModule,
   DropdownModule,
   InputTextModule,
+  MenubarModule,
   MessageModule,
   MessageService,
   MessagesModule,
+  OverlayPanelModule,
   PasswordModule,
+  SidebarModule,
   SplitButtonModule,
   ToastModule
 } from 'primeng';
@@ -24,7 +27,7 @@ import {AgmDirectionModule} from 'agm-direction';
 import {AgmOverlays} from 'agm-overlays';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import { OrderUserComponent } from './order-user/order-user.component';
+import {OrderUserComponent} from './order-user/order-user.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -65,7 +68,11 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
       defaultLanguage: 'pt'
     }),
-    SplitButtonModule
+    SplitButtonModule,
+    MenubarModule,
+    ContextMenuModule,
+    SidebarModule,
+    OverlayPanelModule
   ],
   providers: [
     {
