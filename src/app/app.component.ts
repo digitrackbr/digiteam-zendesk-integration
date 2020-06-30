@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
           this.appStatus = 'login';
         }
       );
-    this.client.invoke('resize', {width: '100%', height: '450px'});
+    this.client.invoke('resize', {width: '100%', height: '70vh'});
   }
 
   init() {

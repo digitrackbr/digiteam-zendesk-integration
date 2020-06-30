@@ -40,7 +40,7 @@
         <input pInputText
                ngModel="{{phone}}"
                formControlName="phone"
-               placeholder="Telefone">
+               placeholder="{{ 'CREATE.PHONE' | translate }}">
       </div>
       <!--ORDER TYPE-->
       <div class="p-col-12 p-md-6 font-weight-600" style="padding-bottom: 1px">
@@ -48,7 +48,7 @@
       </div>
       <div class="p-col-12" *ngIf="!showOrderEdit()">
         <p-dropdown [options]="orderTypeList"
-                    placeholder="Tipo de OS"
+                    placeholder="{{ 'CREATE.ORDER_TYPE' | translate }}"
                     formControlName="orderType"
                     [style]="{'width': '100%'}"
                     required="true"
@@ -74,7 +74,7 @@
       </div>
       <div class="p-col-12" *ngIf="!showPriorityEdit()">
         <p-dropdown [options]="priorityList"
-                    placeholder="Prioridade"
+                    placeholder="{{ 'CREATE.PRIORITY' | translate }}"
                     formControlName="priority"
                     [style]="{'width': '100%'}"
                     [filter]="true"
@@ -101,7 +101,7 @@
       <div class="p-col-12" *ngIf="!showUnitEdit()">
         <p-dropdown [options]="unitsList"
                     required="true"
-                    placeholder="Unidade"
+                    placeholder="{{ 'CREATE.UNIT' | translate }}"
                     [filter]="true"
                     [style]="{'width': '100%'}"
                     (onChange)="onChangeUnit($event)"
@@ -129,7 +129,7 @@
           <input pInputText
                  formControlName="address"
                  ngModel="{{address}}"
-                 placeholder="Endereço"
+                 placeholder="{{ 'CREATE.ADDRESS' | translate }}"
                  required="true">
           <span class="ui-inputgroup-addon" (click)="handleGeocode()">
             <i class="pi pi-map-marker" style="line-height: 1.25;">
